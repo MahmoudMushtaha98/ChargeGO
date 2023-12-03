@@ -1,6 +1,6 @@
 
 import 'dart:async';
-import 'package:charge_go/view/charging_point_screen.dart';
+import 'package:charge_go/view/screen/charging_point_screen.dart';
 import 'package:charge_go/view/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
