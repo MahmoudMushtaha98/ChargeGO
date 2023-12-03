@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
       ),
       body: [
-         MapScreen(),
+         const MapScreen(),
         const Text('route'),
       ][currentPageIndex],
     );
@@ -45,22 +45,3 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-
-//
-// bottomNavigationBar: BottomNavigationBar(
-// backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-//
-// items: const [
-// BottomNavigationBarItem(icon: Icon(Icons.map_outlined),label: 'Map'),
-// BottomNavigationBarItem(icon: Icon(Icons.route),label: 'Route'),
-// ],
-// currentIndex: currentPageIndex,
-// ),
-// body: [
-// Container(
-// child: Text('Map'),
-// ),
-// Container(
-// child: Text('route'),
-// ),
-// ][currentPageIndex],
