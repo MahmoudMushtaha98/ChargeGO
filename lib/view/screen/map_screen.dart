@@ -1,4 +1,5 @@
-import 'package:charge_go/view/screen/splash_screen.dart';
+
+import 'package:charge_go/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class MapScreen extends StatelessWidget {
