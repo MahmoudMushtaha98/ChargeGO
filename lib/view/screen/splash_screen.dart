@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return SizedBox(
       height: widthOrHeight0(context, 0),
       width: double.infinity,
-      child: Icon(Icons.ac_unit,color: Colors.white,),
+      child: const Icon(Icons.ac_unit,color: Colors.white,),
     );
   }
 }
