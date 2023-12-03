@@ -1,3 +1,4 @@
+import 'package:charge_go/view/charging_point_screen.dart';
 import 'package:charge_go/view/splash_screen.dart';
 import 'package:flutter/material.dart';
 
