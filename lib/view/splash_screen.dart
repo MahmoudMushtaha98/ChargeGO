@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:charge_go/view/charging_point_screen.dart';
 import 'package:charge_go/view/screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -27,9 +28,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Image.asset(fit: BoxFit.cover, 'assets/images/Screenshot_180.png'),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SizedBox(
+        width: double.infinity,
+        height: widthOrHeight0(context, 0),
+        child: SvgPicture.asset('assets/svg/Screenshot (180).svg'),
+      ),
     );
   }
 }
