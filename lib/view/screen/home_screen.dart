@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
       ),
       body: [
-        const MapScreen(),
+         MapScreen(),
         const Text('route'),
       ][currentPageIndex],
     );
