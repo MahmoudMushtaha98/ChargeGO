@@ -67,9 +67,7 @@ class _MapScreenState extends State<MapScreen> {
                   Expanded(
                       flex: 1,
                       child: Container(
-
-                          padding:
-                          EdgeInsets.symmetric(horizontal: widthOrHeight0(context, 1) * 0.01),
+                        alignment: Alignment.center,
                           height: widthOrHeight0(context, 1) * 0.07,
                           decoration: BoxDecoration(
                               color: Theme.of(context).scaffoldBackgroundColor,
