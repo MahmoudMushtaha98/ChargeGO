@@ -37,8 +37,6 @@ class _MapScreenState extends State<MapScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Image.network(
-                'https://www.wikihow.com/images/thumb/6/63/Get-Current-Location-on-Google-Maps-Step-2-Version-6.jpg/v4-460px-Get-Current-Location-on-Google-Maps-Step-2-Version-6.jpg.webp'),
             Padding(
               padding: EdgeInsets.all(widthOrHeight0(context, 1) * 0.04),
               child: Row(

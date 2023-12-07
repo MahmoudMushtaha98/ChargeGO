@@ -20,24 +20,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        selectedItemColor: Colors.blue,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map_outlined),label: 'Map'),
-          BottomNavigationBarItem(icon: Icon(Icons.route),label: 'Route'),
-        ],
-        currentIndex: currentPageIndex,
-        onTap: (value) {
-          setState(() {
-            currentPageIndex = value;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20)),
+        child: BottomNavigationBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          selectedItemColor: Colors.blue,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.map_outlined),label: 'Map'),
+            BottomNavigationBarItem(icon: Icon(Icons.route),label: 'Route'),
+            BottomNavigationBarItem(icon: Icon(Icons.settings),label: 'Settings'),
+          ],
+          currentIndex: currentPageIndex,
+          onTap: (value) {
+            setState(() {
+              currentPageIndex = value;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+        ),
       ),
       body: [
          const MapScreen(),
         const Text('route'),
+        const Settings(),
       ][currentPageIndex],
     );
   }
