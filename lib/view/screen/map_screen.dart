@@ -1,8 +1,11 @@
 
+import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/view/screen/charging_point_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
+import '../../main.dart';
 import '../widget/map_icon_widget.dart';
 
 class MapScreen extends StatefulWidget {
@@ -16,7 +19,13 @@ class _MapScreenState extends State<MapScreen> {
   String fil ='Filter';
 
 
-
+@override
+  void initState() {
+  if(appLang.contains('ar')) {
+    FlutterLocalization.instance.translate('ar');
+  }
+  super.initState();
+  }
 
 
 
@@ -47,14 +56,14 @@ class _MapScreenState extends State<MapScreen> {
                       height: widthOrHeight0(context, 1) * 0.07,
                       color: Theme.of(context).scaffoldBackgroundColor,
                       child: TextFormField(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
 
                               borderSide: BorderSide(color: Colors.grey),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
-                          hintText: 'Search a location',
-                          prefixIcon: Icon(Icons.search),
+                          hintText: AppLocale.searchLocation.getString(context),
+                          prefixIcon: const Icon(Icons.search),
                         ),
                       ),
                     ),
@@ -72,14 +81,14 @@ class _MapScreenState extends State<MapScreen> {
                               borderRadius: const BorderRadius.all(Radius.circular(10)),
                               border: Border.all(color: Colors.grey)),
                           child:  Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
+                            padding: EdgeInsets.only(left: widthOrHeight0(context, 1)*0.03,right: widthOrHeight0(context, 1)*0.03),
                             child: DropdownButton<String>(
                               underline: Container(
                                 color: Colors.white,
                               ),
                               style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[700],
+                                fontWeight: FontWeight.bold,
                                 fontSize: widthOrHeight0(context, 1)*0.0164
                               ),
                               isExpanded: true,

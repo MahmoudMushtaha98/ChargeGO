@@ -1,7 +1,10 @@
 
 
 
+import 'package:charge_go/config/translate_map.dart';
+import 'package:charge_go/view/screen/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import 'map_screen.dart';
 
@@ -25,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BottomNavigationBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           selectedItemColor: Colors.blue,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.map_outlined),label: 'Map'),
-            BottomNavigationBarItem(icon: Icon(Icons.route),label: 'Route'),
-            BottomNavigationBarItem(icon: Icon(Icons.settings),label: 'Settings'),
+          items: [
+            BottomNavigationBarItem(icon: const Icon(Icons.map_outlined),label: AppLocale.mapNav.getString(context)),
+            BottomNavigationBarItem(icon: const Icon(Icons.route),label: AppLocale.routeNav.getString(context)),
+            BottomNavigationBarItem(icon: const Icon(Icons.settings),label: AppLocale.settingNav.getString(context)),
           ],
           currentIndex: currentPageIndex,
           onTap: (value) {
@@ -42,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: [
          const MapScreen(),
         const Text('route'),
-        const Settings(),
+         const SettingsScreen(),
       ][currentPageIndex],
     );
   }

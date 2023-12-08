@@ -1,4 +1,5 @@
 
+import 'package:charge_go/view/screen/settings_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -11,6 +12,7 @@ void main() {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -43,9 +45,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       locale: FlutterLocalization.instance.currentLocale,
       debugShowCheckedModeBanner: false,
-      supportedLocales: localization.supportedLocales,
+      supportedLocales: const [
+        Locale('en','US'),
+        Locale('ar','AR')
+      ],
       localizationsDelegates: localization.localizationsDelegates,
       home: const SplashScreen(),
     );
   }
 }
+
+
+String appLang = 'en';

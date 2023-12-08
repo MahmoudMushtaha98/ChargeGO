@@ -1,7 +1,9 @@
 
 
+import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 import 'home_screen.dart';
 
@@ -25,21 +27,21 @@ class _ChargingPointScreenState extends State<ChargingPointScreen> {
           size: 40,
         ),),
       ),
-      body: const Column(
+      body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
             Padding(
 
-             padding:  EdgeInsets.only(top:40.0),
-             child: Text('Charging Point Nearby',
-             style: TextStyle(
+             padding:  const EdgeInsets.only(top:40.0),
+             child: Text(AppLocale.nearCharge.getString(context),
+             style: const TextStyle(
                fontWeight: FontWeight.bold,
                fontSize: 30
              ),
              ),
            ),
 
-          ChargingPointWidget(icons: Icons.ev_station,km: '1.6km',title:'Total Station',chargeStatus:'Charge Free',evaluation: '4/5', ),
+          ChargingPointWidget(icons: Icons.ev_station,km: '1.6km',title:'Total Station',chargeStatus:AppLocale.chargeType.getString(context),evaluation: '4/5', ),
         ],
       ),
     );
