@@ -1,9 +1,6 @@
-
-import 'package:charge_go/view/screen/settings_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-
 import 'config/translate_map.dart';
 
 void main() {
