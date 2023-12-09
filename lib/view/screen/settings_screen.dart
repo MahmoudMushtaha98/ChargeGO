@@ -4,6 +4,7 @@ import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/textformfield_widget.dart';
 
@@ -18,15 +19,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _controller = TextEditingController();
 
   final FlutterLocalization localization = FlutterLocalization.instance;
-  String selectedGender = 'English';
+  String? selectedGender ;
+
 
 
 
   @override
   Widget build(BuildContext context) {
-    if(appLang.contains('ar')){
-      selectedGender = 'Arabic';
-    }
+    selectedGender = appLang.contains('en')? appLang:'ar';
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -100,15 +100,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Radio(
-                fillColor: selectedGender.contains('English')
+                fillColor: selectedGender!.contains('en')
                     ? const MaterialStatePropertyAll(Color(0xff39b6fe))
                     : null,
-                value: 'English',
+                value: 'en',
                 groupValue: selectedGender,
                 onChanged: (value) {
-                  setState(() {
+                  setState(() async{
+                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                     selectedGender = value.toString();
                     localization.translate('en');
+                    sharedPreferences.setString('lang', 'en');
                     appLang = 'en';
                   });
                 },
@@ -119,16 +121,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               Radio(
                 focusColor: const Color(0xff39b6fe),
-                fillColor: selectedGender.contains('Arabic')
+                fillColor: selectedGender!.contains('ar')
                     ? const MaterialStatePropertyAll(Color(0xff39b6fe))
                     : null,
                 activeColor: Colors.black,
-                value: 'Arabic',
+                value: 'ar',
                 groupValue: selectedGender,
                 onChanged: (value) {
-                  setState(() {
+                  setState(() async{
+                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                     selectedGender = value.toString();
                     localization.translate('ar');
+                    sharedPreferences.setString('lang', 'ar');
                     appLang='ar';
                   });
                 },

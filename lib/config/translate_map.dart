@@ -9,6 +9,8 @@ mixin AppLocale {
   static const String login = 'login';
   static const String log = 'log';
   static const String iin = 'in';
+  static const String station = 'station';
+  static const String home = 'home';
 
   static const Map<String, dynamic> EN = {
     mapNav: 'Map',
@@ -19,17 +21,23 @@ mixin AppLocale {
     searchLocation: 'Search a Location',
     login:'Login',
     log:'Log',
-    iin:'in'
+    iin:'in',
+    filter:'Filter',
+    station:'Station',
+    home:'Home'
   };
   static const Map<String, dynamic> AR = {
     mapNav: 'خريطة',
     routeNav:'الطريق',
     settingNav:'الاعدادات',
-    nearCharge:'اقرب نقطة شحن',
+    nearCharge:'نقاط الشحن الأقرب',
     chargeType:'شحن مجاني',
     searchLocation: 'بحث عن موقع',
     login:'تسجيل الدخول',
     log:'تسجيل',
-    iin:'الدخول'
+    iin:'الدخول',
+    filter:'تصفية',
+    station:'محطة',
+    home:'بيت'
   };
 }

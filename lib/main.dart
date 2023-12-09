@@ -19,15 +19,17 @@ class _MyAppState extends State<MyApp> {
 
   final FlutterLocalization localization = FlutterLocalization.instance;
 
+
+
   @override
-  void initState() {
+  void initState(){
     localization.init(
       mapLocales: [
         const MapLocale('en', AppLocale.EN),
         const MapLocale('ar', AppLocale.AR),
 
       ],
-      initLanguageCode: 'en',
+      initLanguageCode: appLang == ''? 'en' : appLang,
     );
     localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
@@ -53,4 +55,4 @@ class _MyAppState extends State<MyApp> {
 }
 
 
-String appLang = 'en';
+String appLang = '';
