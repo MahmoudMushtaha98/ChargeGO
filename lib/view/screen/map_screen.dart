@@ -16,7 +16,6 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  String fil ='Filter';
 
 
 @override
@@ -27,11 +26,13 @@ class _MapScreenState extends State<MapScreen> {
   super.initState();
   }
 
+String fil = 'Filter';
 
 
 
   @override
   Widget build(BuildContext context) {
+
     List<MapIconWidget> mapIcon = [
       MapIconWidget( iconData: Icons.my_location,callback: () {
       },),
@@ -81,7 +82,7 @@ class _MapScreenState extends State<MapScreen> {
                               borderRadius: const BorderRadius.all(Radius.circular(10)),
                               border: Border.all(color: Colors.grey)),
                           child:  Padding(
-                            padding: EdgeInsets.only(left: widthOrHeight0(context, 1)*0.03,right: widthOrHeight0(context, 1)*0.03),
+                            padding: EdgeInsets.only(left: widthOrHeight0(context, 1)*0.03,right: widthOrHeight0(context, 1)*0.01),
                             child: DropdownButton<String>(
                               underline: Container(
                                 color: Colors.white,

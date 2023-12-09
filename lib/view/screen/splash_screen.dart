@@ -4,6 +4,9 @@ import 'package:charge_go/view/screen/charging_point_screen.dart';
 import 'package:charge_go/view/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,13 +20,21 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Timer(
       const Duration(seconds: 2),
-          () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          )),
+          () {
+            aa();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeScreen(),
+                ));
+          }
     );
     super.initState();
+  }
+
+  void aa ()async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    appLang = sharedPreferences.getString('lang')?? 'en';
   }
 
   @override

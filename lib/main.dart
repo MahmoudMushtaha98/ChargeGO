@@ -1,8 +1,8 @@
 
-import 'package:charge_go/view/screen/settings_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/translate_map.dart';
 
@@ -22,15 +22,17 @@ class _MyAppState extends State<MyApp> {
 
   final FlutterLocalization localization = FlutterLocalization.instance;
 
+
+
   @override
-  void initState() {
+  void initState(){
     localization.init(
       mapLocales: [
         const MapLocale('en', AppLocale.EN),
         const MapLocale('ar', AppLocale.AR),
 
       ],
-      initLanguageCode: 'en',
+      initLanguageCode: appLang == ''? 'en' : appLang,
     );
     localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
@@ -56,4 +58,4 @@ class _MyAppState extends State<MyApp> {
 }
 
 
-String appLang = 'en';
+String appLang = '';
