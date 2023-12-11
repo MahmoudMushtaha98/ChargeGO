@@ -1,8 +1,8 @@
 
+import 'package:charge_go/view/screen/map_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/translate_map.dart';
 
@@ -11,6 +11,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+
   const MyApp({super.key});
 
 

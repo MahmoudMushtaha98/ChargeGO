@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'package:charge_go/view/screen/charging_point_screen.dart';
 import 'package:charge_go/view/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       const Duration(seconds: 2),
           () {
-            aa();
+            getPref();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -32,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  void aa ()async{
+  void getPref ()async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     appLang = sharedPreferences.getString('lang')?? 'en';
   }

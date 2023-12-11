@@ -17,11 +17,19 @@ class MapIconWidget extends StatelessWidget {
         width: widthOrHeight0(context, 1)*0.1,
         height: widthOrHeight0(context, 0)*0.05,
         decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey)
+            border: Border.all(color: Colors.grey),
+          boxShadow:  [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              spreadRadius: 0.5,
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ]
         ),
-        child: Icon(iconData,),
+        child: Icon(iconData,color: Colors.blue,),
       ),
     );
   }
