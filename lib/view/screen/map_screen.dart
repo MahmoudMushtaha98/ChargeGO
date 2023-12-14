@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'package:charge_go/config/location.dart';
 import 'package:charge_go/config/translate_map.dart';
+import 'package:charge_go/controller/map_controller.dart';
 import 'package:charge_go/view/screen/charging_point_screen.dart';
 import 'package:charge_go/view/screen/settings_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import '../../main.dart';
 import '../widget/map_icon_widget.dart';
 
@@ -19,28 +18,23 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
 
-  static const CameraPosition _initialCameraPosition =
-      CameraPosition(target: LatLng(31.963158, 35.930359), zoom: 10);
-  LatLng currentLocation = _initialCameraPosition.target;
 
-  Future<void> getMyLocation() async {
-    LocationData myLocation = await LocationService().getLocation();
-    _animateCamera(myLocation);
-  }
+  MapController mapController = MapController(Completer<GoogleMapController>(),
+      const CameraPosition(target: LatLng(31.963158, 35.930359), zoom: 10),
+      const LatLng(31.963158, 35.930359));
+
+
 
   @override
   void initState() {
     if (appLang.contains('ar')) {
       FlutterLocalization.instance.translate('ar');
     }
-    getMyLocation();
+    mapController.getMyLocation();
     super.initState();
   }
 
-  String fil = 'Filter';
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +42,7 @@ class _MapScreenState extends State<MapScreen> {
       MapIconWidget(
         iconData: Icons.gps_fixed,
         callback: () {
-          getMyLocation();
+          mapController.getMyLocation();
         },
       ),
       MapIconWidget(
@@ -69,11 +63,11 @@ class _MapScreenState extends State<MapScreen> {
         child: Stack(
           children: [
             GoogleMap(
-              initialCameraPosition: _initialCameraPosition,
-              onMapCreated: (controller) => _controller.complete(controller),
+              initialCameraPosition: mapController.initialCameraPosition,
+              onMapCreated: (controller) => mapController.controller.complete(controller),
               onCameraMove: (position) {
                 setState(() {
-                  currentLocation = position.target;
+                  mapController.currentLocation = position.target;
                 });
               },
               mapType: MapType.normal,
@@ -88,9 +82,11 @@ class _MapScreenState extends State<MapScreen> {
                     child: Container(
                       height: widthOrHeight0(context, 1) * 0.07,
                       decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
+                          color: Theme
+                              .of(context)
+                              .scaffoldBackgroundColor,
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          const BorderRadius.all(Radius.circular(10)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.4),
@@ -104,7 +100,7 @@ class _MapScreenState extends State<MapScreen> {
                           border: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                              BorderRadius.all(Radius.circular(10))),
                           hintText: AppLocale.searchLocation.getString(context),
                           prefixIcon: const Icon(Icons.search),
                         ),
@@ -131,11 +127,11 @@ class _MapScreenState extends State<MapScreen> {
                             mapIcon[index],
                             (index == 0)
                                 ? SizedBox(
-                                    height: widthOrHeight0(context, 0) * 0.05,
-                                  )
+                              height: widthOrHeight0(context, 0) * 0.05,
+                            )
                                 : SizedBox(
-                                    height: widthOrHeight0(context, 0) * 0.01,
-                                  )
+                              height: widthOrHeight0(context, 0) * 0.01,
+                            )
                           ],
                         );
                       }),
@@ -156,11 +152,5 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Future<void> _animateCamera(LocationData locationData) async {
-    final GoogleMapController controller = await _controller.future;
-    CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(locationData.latitude!, locationData.longitude!),
-        zoom: 17);
-    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-  }
+
 }

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../controller/setting_controller.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -15,14 +17,12 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final FlutterLocalization localization = FlutterLocalization.instance;
-  String? selectedLanguage;
-  bool station = true;
-  bool home = true;
+
+  SettingController settingController = SettingController();
 
   @override
   Widget build(BuildContext context) {
-    selectedLanguage = appLang.contains('en') ? appLang : 'ar';
+    settingController.selectedLanguage = appLang.contains('en') ? appLang : 'ar';
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -75,10 +75,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             widthOrHeight0(context, 1) * 0.025,
                                         fontWeight: FontWeight.bold)),
                                 Switch(
-                                  value: station,
+                                  value: settingController.station,
                                   onChanged: (value) {
                                     setState(() {
-                                      station = value;
+                                      settingController.station = value;
                                     });
                                   },
                                   activeTrackColor: Colors.blue,
@@ -103,10 +103,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             widthOrHeight0(context, 1) * 0.025,
                                         fontWeight: FontWeight.bold)),
                                 Switch(
-                                  value: home,
+                                  value: settingController.home,
                                   onChanged: (value) {
                                     setState(() {
-                                      home = value;
+                                      settingController.home = value;
                                     });
                                   },
                                   activeTrackColor: Colors.blue,
@@ -156,18 +156,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Radio(
-                            fillColor: selectedLanguage!.contains('en')
+                            fillColor: settingController.selectedLanguage!.contains('en')
                                 ? const MaterialStatePropertyAll(
                                     Color(0xff39b6fe))
                                 : null,
                             value: 'en',
-                            groupValue: selectedLanguage,
+                            groupValue: settingController.selectedLanguage,
                             onChanged: (value) {
                               setState(() async {
                                 SharedPreferences sharedPreferences =
                                     await SharedPreferences.getInstance();
-                                selectedLanguage = value.toString();
-                                localization.translate('en');
+                                settingController.selectedLanguage = value.toString();
+                                settingController.localization.translate('en');
                                 sharedPreferences.setString('lang', 'en');
                                 appLang = 'en';
                               });
@@ -180,19 +180,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           Radio(
                             focusColor: const Color(0xff39b6fe),
-                            fillColor: selectedLanguage!.contains('ar')
+                            fillColor: settingController.selectedLanguage!.contains('ar')
                                 ? const MaterialStatePropertyAll(
                                     Color(0xff39b6fe))
                                 : null,
                             activeColor: Colors.black,
                             value: 'ar',
-                            groupValue: selectedLanguage,
+                            groupValue: settingController.selectedLanguage,
                             onChanged: (value) {
                               setState(() async {
                                 SharedPreferences sharedPreferences =
                                     await SharedPreferences.getInstance();
-                                selectedLanguage = value.toString();
-                                localization.translate('ar');
+                                settingController.selectedLanguage = value.toString();
+                                settingController.localization.translate('ar');
                                 sharedPreferences.setString('lang', 'ar');
                                 appLang = 'ar';
                               });
