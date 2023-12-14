@@ -11,33 +11,30 @@ mixin AppLocale {
   static const String iin = 'in';
   static const String station = 'station';
   static const String home = 'home';
+  static const String language = 'language';
 
   static const Map<String, dynamic> EN = {
     mapNav: 'Map',
-    routeNav:'Route',
-    settingNav:'Setting',
-    nearCharge:'Charging Point Nearby',
-    chargeType:'Charge Free',
+    routeNav: 'Route',
+    settingNav: 'Setting',
+    nearCharge: 'Charging Point Nearby',
+    chargeType: 'Charge Free',
     searchLocation: 'Search a Location',
-    login:'Login',
-    log:'Log',
-    iin:'in',
-    filter:'Filter',
-    station:'Station',
-    home:'Home'
+    filter: 'Filter',
+    station: 'Station',
+    home: 'Home',
+    language: 'language'
   };
   static const Map<String, dynamic> AR = {
     mapNav: 'خريطة',
-    routeNav:'الطريق',
-    settingNav:'الاعدادات',
-    nearCharge:'نقاط الشحن الأقرب',
-    chargeType:'شحن مجاني',
+    routeNav: 'الطريق',
+    settingNav: 'الاعدادات',
+    nearCharge: 'نقاط الشحن الأقرب',
+    chargeType: 'شحن مجاني',
     searchLocation: 'بحث عن موقع',
-    login:'تسجيل الدخول',
-    log:'تسجيل',
-    iin:'الدخول',
-    filter:'تصفية',
-    station:'محطة',
-    home:'بيت'
+    filter: 'تصفية',
+    station: 'محطة',
+    home: 'بيت',
+    language: 'اللغة'
   };
 }

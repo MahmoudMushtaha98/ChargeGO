@@ -72,11 +72,13 @@ class _RouteScreenState extends State<RouteScreen> {
                           Expanded(
                             child: Container(
                               alignment: Alignment.bottomLeft,
-                              child: Text('Current Location',
+                              child: Text(
+                                'Current Location',
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize:
-                                    widthOrHeight0(context, 1) * 0.025),),
+                                        widthOrHeight0(context, 1) * 0.025),
+                              ),
                             ),
                           ),
                           const Divider(),

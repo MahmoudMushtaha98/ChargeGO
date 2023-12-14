@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class TextFormWidget extends StatelessWidget {
@@ -12,13 +11,13 @@ class TextFormWidget extends StatelessWidget {
 
   const TextFormWidget(
       {super.key,
-        required this.obscureText,
-        required this.passController,
-        required this.hintText,
-        this.width = 0,
-        this.height = 0,
-        this.color = Colors.lime,
-        this.iconSufData = Icons.add});
+      required this.obscureText,
+      required this.passController,
+      required this.hintText,
+      this.width = 0,
+      this.height = 0,
+      this.color = Colors.lime,
+      this.iconSufData = Icons.add});
 
   @override
   Widget build(BuildContext context) {
@@ -29,48 +28,41 @@ class TextFormWidget extends StatelessWidget {
           textAlign: TextAlign.left,
           keyboardType: TextInputType.emailAddress,
           obscureText: obscureText,
-
           controller: passController,
           decoration: InputDecoration(
-            prefixIcon: Icon((iconSufData == Icons.add) ? null : iconSufData,color: Color(0xffa8a8a8)),
+            prefixIcon: Icon((iconSufData == Icons.add) ? null : iconSufData,
+                color: Color(0xffa8a8a8)),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: (color == Colors.lime)
-                    ? const Color(0xff6482c4).withOpacity(0.8)
-                    : color,
-              ),
-              borderRadius: const BorderRadius.all(Radius.circular(10))
-            ),
+                borderSide: BorderSide(
+                  color: (color == Colors.lime)
+                      ? const Color(0xff6482c4).withOpacity(0.8)
+                      : color,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: (color == Colors.lime)
-                    ? const Color(0xff6482c4).withOpacity(0.8)
-                    : color,
-              ),
-                borderRadius: const BorderRadius.all(Radius.circular(10))
-            ),
+                borderSide: BorderSide(
+                  color: (color == Colors.lime)
+                      ? const Color(0xff6482c4).withOpacity(0.8)
+                      : color,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.red.withOpacity(0.8),
-
               ),
-
-
             ),
-            focusedErrorBorder:  OutlineInputBorder(
+            focusedErrorBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.red.withOpacity(0.8),
               ),
             ),
-            disabledBorder:  OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.red.withOpacity(0.8),
-              ),
-                borderRadius: const BorderRadius.all(Radius.circular(20))
-            ),
+            disabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.red.withOpacity(0.8),
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
             isDense: true,
             hintText: hintText,
-
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
         ));

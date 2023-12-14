@@ -1,6 +1,7 @@
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'config/screen_route.dart';
 import 'config/translate_map.dart';
 
 void main() {
@@ -8,29 +9,23 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-
   const MyApp({super.key});
-
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-
   final FlutterLocalization localization = FlutterLocalization.instance;
 
-
-
   @override
-  void initState(){
+  void initState() {
     localization.init(
       mapLocales: [
         const MapLocale('en', AppLocale.EN),
         const MapLocale('ar', AppLocale.AR),
-
       ],
-      initLanguageCode: appLang == ''? 'en' : appLang,
+      initLanguageCode: appLang == '' ? 'en' : appLang,
     );
     localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
@@ -45,15 +40,12 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       locale: FlutterLocalization.instance.currentLocale,
       debugShowCheckedModeBanner: false,
-      supportedLocales: const [
-        Locale('en','US'),
-        Locale('ar','AR')
-      ],
+      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'AR')],
       localizationsDelegates: localization.localizationsDelegates,
+      routes: routes(),
       home: const SplashScreen(),
     );
   }
 }
-
 
 String appLang = '';

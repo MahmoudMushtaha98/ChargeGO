@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:charge_go/view/screen/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,23 +16,20 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(
-      const Duration(seconds: 2),
-          () {
-            getPref();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
-                ));
-          }
-    );
+    Timer(const Duration(seconds: 2), () {
+      getPref();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ));
+    });
     super.initState();
   }
 
-  void getPref ()async{
+  void getPref() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    appLang = sharedPreferences.getString('lang')?? 'en';
+    appLang = sharedPreferences.getString('lang') ?? 'en';
   }
 
   @override
@@ -48,10 +44,11 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-double widthOrHeight0(BuildContext context,int number){
-  if(number == 0){
+
+double widthOrHeight0(BuildContext context, int number) {
+  if (number == 0) {
     return MediaQuery.of(context).size.height;
-  }else{
+  } else {
     return MediaQuery.of(context).size.height;
   }
 }

@@ -24,19 +24,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xfff7ebd6),
       bottomNavigationBar: Container(
-        height: widthOrHeight0(context, 0)*0.1,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.4),
-              spreadRadius: 0.5,
-              blurRadius: 30,
-              offset: const Offset(0, 5),
-            ),
-          ]
-        ),
+        height: widthOrHeight0(context, 0) * 0.1,
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            spreadRadius: 0.5,
+            blurRadius: 30,
+            offset: const Offset(0, 5),
+          ),
+        ]),
         child: ClipRRect(
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           child: BottomNavigationBar(
             elevation: 0,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -48,9 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
               BottomNavigationBarItem(
                   icon: const Icon(Icons.route),
                   label: AppLocale.routeNav.getString(context)),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.settings),
-                  label: AppLocale.settingNav.getString(context)),
             ],
             currentIndex: currentPageIndex,
             onTap: (value) {
@@ -64,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: [
         const MapScreen(),
         const RouteScreen(),
-        const SettingsScreen(),
       ][currentPageIndex],
     );
   }
