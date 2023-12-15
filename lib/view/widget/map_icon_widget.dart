@@ -22,7 +22,6 @@ class MapIconWidget extends StatelessWidget {
         decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.4),

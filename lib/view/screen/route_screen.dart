@@ -1,5 +1,8 @@
+import 'package:charge_go/config/translate_map.dart';
+import 'package:charge_go/controller/route_controller.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RouteScreen extends StatefulWidget {
@@ -10,6 +13,9 @@ class RouteScreen extends StatefulWidget {
 }
 
 class _RouteScreenState extends State<RouteScreen> {
+
+  RouteController routeController = RouteController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,12 +78,26 @@ class _RouteScreenState extends State<RouteScreen> {
                           Expanded(
                             child: Container(
                               alignment: Alignment.bottomLeft,
-                              child: Text(
-                                'Current Location',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize:
-                                        widthOrHeight0(context, 1) * 0.025),
+                              child: TextFormField(
+                                onTap: () {
+                                  setState(() {
+                                    routeController.onTapCur = true;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                    label: routeController.onTapCur
+                                        ? null
+                                        : Text(
+                                            AppLocale.myLocation.getString(context),
+                                            style: TextStyle(
+                                                fontSize:
+                                                    widthOrHeight0(context, 1) *
+                                                        0.027),
+                                          ),
+                                    focusedBorder: const UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.blue)),
+                                ),
                               ),
                             ),
                           ),
@@ -85,12 +105,23 @@ class _RouteScreenState extends State<RouteScreen> {
                           Expanded(
                             child: Container(
                               alignment: Alignment.topLeft,
-                              child: Text(
-                                'Where to?',
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize:
+                              child: TextFormField(
+                                onTap: () {
+                                  setState(() {
+                                    routeController.onTapWh = true;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  label: routeController.onTapWh? null : Text(
+                                    AppLocale.location.getString(context),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize:
                                         widthOrHeight0(context, 1) * 0.025),
+                                  ),
+                                  focusedBorder: InputBorder.none,
+                                  border: InputBorder.none
+                                ),
                               ),
                             ),
                           ),

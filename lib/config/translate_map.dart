@@ -12,6 +12,8 @@ mixin AppLocale {
   static const String station = 'station';
   static const String home = 'home';
   static const String language = 'language';
+  static const String myLocation = 'myLocation';
+  static const String location = 'location';
 
   static const Map<String, dynamic> EN = {
     mapNav: 'Map',
@@ -23,7 +25,9 @@ mixin AppLocale {
     filter: 'Filter',
     station: 'Station',
     home: 'Home',
-    language: 'language'
+    language: 'language',
+    myLocation:'Current Location',
+    location: 'Where to?'
   };
   static const Map<String, dynamic> AR = {
     mapNav: 'خريطة',
@@ -35,6 +39,8 @@ mixin AppLocale {
     filter: 'تصفية',
     station: 'محطة',
     home: 'بيت',
-    language: 'اللغة'
+    language: 'اللغة',
+    myLocation:'موقعي الحالي',
+    location:'الى'
   };
 }

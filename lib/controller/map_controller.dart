@@ -1,22 +1,25 @@
 import 'dart:async';
-
+import 'dart:collection';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-
 import '../config/location.dart';
+import '../view/screen/charging_point_screen.dart';
+import '../view/screen/settings_screen.dart';
+import '../view/widget/map_icon_widget.dart';
 
 class MapController{
 
   late final Completer<GoogleMapController> _controller ;
-  // Completer<GoogleMapController>();
 
   late final CameraPosition _initialCameraPosition ;
 
   late final LatLng _currentLocation ;
 
+  HashSet<Marker> marker = HashSet<Marker>();
+
 
   MapController(this._controller, this._initialCameraPosition, this._currentLocation);
-// CameraPosition(target: LatLng(31.963158, 35.930359), zoom: 10);
 
   Completer<GoogleMapController> get controller => _controller;
 
@@ -46,11 +49,32 @@ class MapController{
     final GoogleMapController controller = await _controller.future;
     CameraPosition cameraPosition = CameraPosition(
         target: LatLng(locationData.latitude!, locationData.longitude!),
-        zoom: 17);
+        zoom: 25);
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
-// _initialCameraPosition.target
 
+  List mapIcon(BuildContext context){
+    return [
+      MapIconWidget(
+        iconData: Icons.gps_fixed,
+        callback: () {
+          getMyLocation();
+        },
+      ),
+      MapIconWidget(
+        iconData: Icons.list,
+        callback: () {
+          Navigator.pushNamed(context, ChargingPointScreen.routeScreen);
+        },
+      ),
+      MapIconWidget(
+        iconData: Icons.settings,
+        callback: () {
+          Navigator.pushNamed(context, SettingsScreen.routeScreen);
+        },
+      )
+    ];
+  }
 
 
 }
