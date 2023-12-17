@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../controller/position_services.dart';
+
 class RouteScreen extends StatefulWidget {
   const RouteScreen({super.key});
 
@@ -13,17 +15,27 @@ class RouteScreen extends StatefulWidget {
 }
 
 class _RouteScreenState extends State<RouteScreen> {
-
   RouteController routeController = RouteController();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async{
+          await routeController.positionServices.getPlaceId(routeController.controllerEnd.text);
+        },
+        child: Text('Go'),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
-            const GoogleMap(
-              initialCameraPosition: CameraPosition(
+            GoogleMap(
+              markers: routeController.markers,
+              onTap: (argument) {
+                addMarker(argument);
+              },
+              initialCameraPosition: const CameraPosition(
                   target: LatLng(31.963158, 35.930359), zoom: 10),
               zoomControlsEnabled: false,
             ),
@@ -79,24 +91,26 @@ class _RouteScreenState extends State<RouteScreen> {
                             child: Container(
                               alignment: Alignment.bottomLeft,
                               child: TextFormField(
+                                controller: routeController.controllerStart,
                                 onTap: () {
                                   setState(() {
                                     routeController.onTapCur = true;
                                   });
                                 },
                                 decoration: InputDecoration(
-                                    label: routeController.onTapCur
-                                        ? null
-                                        : Text(
-                                            AppLocale.myLocation.getString(context),
-                                            style: TextStyle(
-                                                fontSize:
-                                                    widthOrHeight0(context, 1) *
-                                                        0.027),
-                                          ),
-                                    focusedBorder: const UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.blue)),
+                                  label: routeController.onTapCur
+                                      ? null
+                                      : Text(
+                                          AppLocale.myLocation
+                                              .getString(context),
+                                          style: TextStyle(
+                                              fontSize:
+                                                  widthOrHeight0(context, 1) *
+                                                      0.027),
+                                        ),
+                                  focusedBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.blue)),
                                 ),
                               ),
                             ),
@@ -106,22 +120,26 @@ class _RouteScreenState extends State<RouteScreen> {
                             child: Container(
                               alignment: Alignment.topLeft,
                               child: TextFormField(
+                                controller: routeController.controllerEnd,
                                 onTap: () {
                                   setState(() {
                                     routeController.onTapWh = true;
                                   });
                                 },
                                 decoration: InputDecoration(
-                                  label: routeController.onTapWh? null : Text(
-                                    AppLocale.location.getString(context),
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize:
-                                        widthOrHeight0(context, 1) * 0.025),
-                                  ),
-                                  focusedBorder: InputBorder.none,
-                                  border: InputBorder.none
-                                ),
+                                    label: routeController.onTapWh
+                                        ? null
+                                        : Text(
+                                            AppLocale.location
+                                                .getString(context),
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize:
+                                                    widthOrHeight0(context, 1) *
+                                                        0.025),
+                                          ),
+                                    focusedBorder: InputBorder.none,
+                                    border: InputBorder.none),
                               ),
                             ),
                           ),
@@ -136,5 +154,20 @@ class _RouteScreenState extends State<RouteScreen> {
         ),
       ),
     );
+  }
+
+  void addMarker(LatLng argument) {
+    setState(() {
+      routeController.markers.add(Marker(
+          markerId: MarkerId('marker ${routeController.markers.length + 1}'),
+          position: LatLng(argument.latitude, argument.longitude),
+          infoWindow: InfoWindow(
+              title: 'Position ${routeController.markers.length + 1}',
+              snippet:
+                  'latitude: ${argument.latitude}, longitude: ${argument.longitude}')));
+    });
+  }
+  Future<void> _goToPlace(LatLng latLng)async{
+    final GoogleMapController controller = await routeController.
   }
 }
