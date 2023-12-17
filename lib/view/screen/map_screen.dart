@@ -53,7 +53,7 @@ class _MapScreenState extends State<MapScreen> {
                   mapController.currentLocation = position.target;
                 });
               },
-              mapType: MapType.normal,
+              mapType: MapType.hybrid,
               zoomControlsEnabled: false,
               markers: mapController.marker,
             ),
