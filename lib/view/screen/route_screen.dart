@@ -24,25 +24,10 @@ class _RouteScreenState extends State<RouteScreen> {
   List<LatLng> latLong = [];
 
 
-  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
 
-  void addCustomIcon() {
-    BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/images/200 home.jpg")
-        .then(
-          (icon) {
-        setState(() {
-          markerIcon = icon;
-        });
-      },
-    );
-  }
 
-  @override
-  void initState() {
-    addCustomIcon();
-    super.initState();
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +45,11 @@ class _RouteScreenState extends State<RouteScreen> {
           result.points.forEach((element) {
             latLong.add(LatLng(element.latitude, element.longitude));
           });
-          print(details);
+
           setState(() {
-            routeController.markers.add( Marker(
+            routeController.markers.add( const Marker(
               markerId: MarkerId('Start'),
               position: LatLng(31.963158, 35.930359),
-              icon: markerIcon
             ));
             routeController.markers.add(Marker(
                 markerId: const MarkerId('End'), position: latLong.last));
