@@ -14,12 +14,12 @@ class MapController{
 
   late final CameraPosition _initialCameraPosition ;
 
-  late final LatLng _currentLocation ;
+  late LatLng currentLocation ;
 
   HashSet<Marker> marker = HashSet<Marker>();
 
 
-  MapController(this._controller, this._initialCameraPosition, this._currentLocation);
+  MapController(this._controller, this._initialCameraPosition,);
 
   Completer<GoogleMapController> get controller => _controller;
 
@@ -33,11 +33,8 @@ class MapController{
     _initialCameraPosition = value;
   }
 
-  LatLng get currentLocation => _currentLocation;
 
-  set currentLocation(LatLng value) {
-    _currentLocation = value;
-  }
+
 
 
   Future<void> getMyLocation() async {
@@ -49,7 +46,7 @@ class MapController{
     final GoogleMapController controller = await _controller.future;
     CameraPosition cameraPosition = CameraPosition(
         target: LatLng(locationData.latitude!, locationData.longitude!),
-        zoom: 25);
+        zoom: 17);
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 

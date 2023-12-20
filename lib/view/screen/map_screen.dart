@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:charge_go/config/location.dart';
 import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/controller/map_controller.dart';
+import 'package:charge_go/controller/nearest_station.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -19,17 +21,18 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   MapController mapController = MapController(
       Completer<GoogleMapController>(),
-      const CameraPosition(target: LatLng(31.963158, 35.930359), zoom: 10),
-      const LatLng(31.963158, 35.930359));
+       CameraPosition(target: LatLng(locationData.latitude!, locationData.longitude!), zoom: 15),
+      );
 
   @override
   void initState() {
     if (appLang.contains('ar')) {
       FlutterLocalization.instance.translate('ar');
     }
-    mapController.getMyLocation();
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +43,12 @@ class _MapScreenState extends State<MapScreen> {
             GoogleMap(
               initialCameraPosition: mapController.initialCameraPosition,
               onMapCreated: (controller) async {
-                LocationData lo =await LocationService().getLocation();
                 mapController.controller.complete(controller);
                setState(() {
                  mapController.marker.add(Marker(
                      markerId: const MarkerId('1'),
-                     position: LatLng(lo.latitude!,lo.longitude!)),);
+                     position: LatLng(locationData.latitude!,locationData.longitude!)),);
                });
-              },
-              onCameraMove: (position) {
-                setState(() {
-                  mapController.currentLocation = position.target;
-                });
               },
               mapType: MapType.hybrid,
               zoomControlsEnabled: false,
@@ -85,6 +82,10 @@ class _MapScreenState extends State<MapScreen> {
                                   BorderRadius.all(Radius.circular(10))),
                           hintText: AppLocale.searchLocation.getString(context),
                           prefixIcon: const Icon(Icons.search),
+                          suffixIcon: IconButton(onPressed: () {
+                            NearestStation neare = NearestStation();
+                            // neare.nearestStation(LatLng(, mapController.myLocation.longitude!,));
+                          }, icon: const Icon(Icons.play_arrow_rounded,color: Colors.blue,))
                         ),
                       ),
                     ),

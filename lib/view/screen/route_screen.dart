@@ -29,6 +29,7 @@ class _RouteScreenState extends State<RouteScreen> {
 
 
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +43,9 @@ class _RouteScreenState extends State<RouteScreen> {
                   const PointLatLng(31.963158, 35.930359),
                   PointLatLng(details['geometry']['location']['lat'],
                       details['geometry']['location']['lng']));
-          result.points.forEach((element) {
+          for (var element in result.points) {
             latLong.add(LatLng(element.latitude, element.longitude));
-          });
+          }
 
           setState(() {
             routeController.markers.add( const Marker(

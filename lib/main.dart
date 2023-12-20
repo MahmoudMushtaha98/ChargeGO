@@ -1,10 +1,15 @@
+import 'package:charge_go/config/location.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:location/location.dart';
 import 'config/screen_route.dart';
 import 'config/translate_map.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  locationData =await LocationService().getLocation();
+
   runApp(const MyApp());
 }
 
@@ -49,3 +54,4 @@ class _MyAppState extends State<MyApp> {
 }
 
 String appLang = '';
+LocationData locationData = LocationData.fromMap({"latitude": 0.0, "longitude": 0.0});

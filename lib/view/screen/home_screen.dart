@@ -21,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff7ebd6),
       bottomNavigationBar: Container(
         height: widthOrHeight0(context, 0)*0.1,
         decoration: BoxDecoration(
@@ -34,27 +33,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ]
         ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30)),
-          child: BottomNavigationBar(
-            elevation: 0,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            selectedItemColor: Colors.blue,
-            items: [
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.map_outlined),
-                  label: AppLocale.mapNav.getString(context)),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.route),
-                  label: AppLocale.routeNav.getString(context)),
-            ],
-            currentIndex: currentPageIndex,
-            onTap: (value) {
-              setState(() {
-                currentPageIndex = value;
-              });
-            },
-          ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          selectedItemColor: Colors.blue,
+          items: [
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.map_outlined),
+                label: AppLocale.mapNav.getString(context)),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.route),
+                label: AppLocale.routeNav.getString(context)),
+          ],
+          currentIndex: currentPageIndex,
+          onTap: (value) {
+            setState(() {
+              currentPageIndex = value;
+            });
+          },
         ),
       ),
       body: [
