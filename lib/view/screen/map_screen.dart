@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:charge_go/config/location.dart';
+
 import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/controller/map_controller.dart';
 import 'package:charge_go/controller/nearest_station.dart';
+import 'package:charge_go/model/station_model.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import '../../main.dart';
 
 class MapScreen extends StatefulWidget {
@@ -20,19 +19,23 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   MapController mapController = MapController(
-      Completer<GoogleMapController>(),
-       CameraPosition(target: LatLng(locationData.latitude!, locationData.longitude!), zoom: 15),
-      );
+    Completer<GoogleMapController>(),
+    CameraPosition(
+        target: LatLng(locationData.latitude!, locationData.longitude!),
+        zoom: 15),
+  );
 
   @override
   void initState() {
     if (appLang.contains('ar')) {
       FlutterLocalization.instance.translate('ar');
     }
+
     super.initState();
   }
 
 
+  NearestStation nearestStation = NearestStation();
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +47,25 @@ class _MapScreenState extends State<MapScreen> {
               initialCameraPosition: mapController.initialCameraPosition,
               onMapCreated: (controller) async {
                 mapController.controller.complete(controller);
-               setState(() {
-                 mapController.marker.add(Marker(
-                     markerId: const MarkerId('1'),
-                     position: LatLng(locationData.latitude!,locationData.longitude!)),);
-               });
+                List<StationsModel> list = await nearestStation.nearestStation(
+                    LatLng(locationData.latitude!, locationData.longitude!));
+                setState(() {
+                  mapController.marker.add(
+                    Marker(
+                        markerId: const MarkerId('1'),
+                        position: LatLng(
+                            locationData.latitude!, locationData.longitude!)),
+                  );
+                });
+                for (var element in list) {
+                 setState(() {
+                   mapController.marker.add(Marker(
+                       markerId: MarkerId(
+                         element.id,
+                       ),
+                       position: element.latLng));
+                 });
+                }
               },
               mapType: MapType.hybrid,
               zoomControlsEnabled: false,
@@ -76,17 +93,24 @@ class _MapScreenState extends State<MapScreen> {
                           ]),
                       child: TextFormField(
                         decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          hintText: AppLocale.searchLocation.getString(context),
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: IconButton(onPressed: () {
-                            NearestStation neare = NearestStation();
-                            // neare.nearestStation(LatLng(, mapController.myLocation.longitude!,));
-                          }, icon: const Icon(Icons.play_arrow_rounded,color: Colors.blue,))
-                        ),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            hintText:
+                                AppLocale.searchLocation.getString(context),
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  NearestStation neare = NearestStation();
+                                  neare.nearestStation(LatLng(
+                                      locationData.latitude!,
+                                      locationData.longitude!));
+                                },
+                                icon: const Icon(
+                                  Icons.play_arrow_rounded,
+                                  color: Colors.blue,
+                                ))),
                       ),
                     ),
                   ),
@@ -104,7 +128,8 @@ class _MapScreenState extends State<MapScreen> {
                       width: double.infinity,
                     ),
                     Column(
-                      children: List.generate(mapController.mapIcon(context).length, (index) {
+                      children: List.generate(
+                          mapController.mapIcon(context).length, (index) {
                         return Column(
                           children: [
                             mapController.mapIcon(context)[index],

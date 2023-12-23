@@ -46,7 +46,7 @@ class MapController{
     final GoogleMapController controller = await _controller.future;
     CameraPosition cameraPosition = CameraPosition(
         target: LatLng(locationData.latitude!, locationData.longitude!),
-        zoom: 17);
+        zoom: 10);
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
