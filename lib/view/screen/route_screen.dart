@@ -72,9 +72,6 @@ class _RouteScreenState extends State<RouteScreen> {
           children: [
             GoogleMap(
               markers: routeController.markers,
-              onTap: (argument) {
-                addMarker(argument);
-              },
               initialCameraPosition: iniCameraPosition,
               zoomControlsEnabled: false,
               polylines: polyLine,

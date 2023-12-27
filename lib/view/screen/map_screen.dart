@@ -30,10 +30,18 @@ class _MapScreenState extends State<MapScreen> {
     if (appLang.contains('ar')) {
       FlutterLocalization.instance.translate('ar');
     }
-
+    addCustomMarker();
     super.initState();
   }
-
+  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+  void addCustomMarker() {
+    ImageConfiguration configuration =
+    const ImageConfiguration(size: Size(100, 100));
+    BitmapDescriptor.fromAssetImage(configuration, "assets/images/myLocation.png")
+        .then((icon) {
+      markerIcon = icon;
+    });
+  }
 
   NearestStation nearestStation = NearestStation();
 
@@ -52,9 +60,11 @@ class _MapScreenState extends State<MapScreen> {
                 setState(() {
                   mapController.marker.add(
                     Marker(
-                        markerId: const MarkerId('1'),
+                        markerId: const MarkerId('current location'),
                         position: LatLng(
-                            locationData.latitude!, locationData.longitude!)),
+                            locationData.latitude!, locationData.longitude!),
+                      icon:markerIcon
+                    ),
                   );
                 });
                 for (var element in list) {
@@ -68,7 +78,6 @@ class _MapScreenState extends State<MapScreen> {
                 }
               },
               mapType: MapType.hybrid,
-              zoomControlsEnabled: false,
               markers: mapController.marker,
             ),
             Padding(
@@ -153,7 +162,7 @@ class _MapScreenState extends State<MapScreen> {
                   width: double.infinity,
                 )
               ],
-            )
+            ),
           ],
         ),
       ),
