@@ -16,18 +16,6 @@ class RouteScreen extends StatefulWidget {
 
 class _RouteScreenState extends State<RouteScreen> {
   RouteController routeController = RouteController();
-  PolylinePoints polylinePoints = PolylinePoints();
-  CameraPosition iniCameraPosition =
-      const CameraPosition(target: LatLng(31.963158, 35.930359), zoom: 15);
-
-  Set<Polyline> polyLine = <Polyline>{};
-  List<LatLng> latLong = [];
-
-
-
-
-
-
 
 
   @override
@@ -38,13 +26,13 @@ class _RouteScreenState extends State<RouteScreen> {
           Map<String, dynamic> details = await routeController.positionServices
               .getPlaceId(routeController.controllerEnd.text);
           PolylineResult result =
-              await polylinePoints.getRouteBetweenCoordinates(
+              await routeController.polylinePoints.getRouteBetweenCoordinates(
                   'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
                   const PointLatLng(31.963158, 35.930359),
                   PointLatLng(details['geometry']['location']['lat'],
                       details['geometry']['location']['lng']));
           for (var element in result.points) {
-            latLong.add(LatLng(element.latitude, element.longitude));
+            routeController.latLong.add(LatLng(element.latitude, element.longitude));
           }
 
           setState(() {
@@ -53,12 +41,12 @@ class _RouteScreenState extends State<RouteScreen> {
               position: LatLng(31.963158, 35.930359),
             ));
             routeController.markers.add(Marker(
-                markerId: const MarkerId('End'), position: latLong.last));
-            polyLine.add(Polyline(
+                markerId: const MarkerId('End'), position: routeController.latLong.last));
+            routeController.polyLine.add(Polyline(
                 polylineId: PolylineId(
-                  '${polyLine.length + 1}',
+                  '${routeController.polyLine.length + 1}',
                 ),
-                points: latLong,
+                points: routeController.latLong,
                 color: Colors.blue));
           });
         },
@@ -72,10 +60,10 @@ class _RouteScreenState extends State<RouteScreen> {
           children: [
             GoogleMap(
               markers: routeController.markers,
-              initialCameraPosition: iniCameraPosition,
+              initialCameraPosition: routeController.iniCameraPosition,
               zoomControlsEnabled: false,
-              polylines: polyLine,
-              mapType: MapType.hybrid,
+              polylines: routeController.polyLine,
+              mapType: MapType.terrain,
             ),
             Container(
               width: double.infinity,

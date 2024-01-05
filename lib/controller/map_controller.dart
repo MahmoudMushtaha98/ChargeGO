@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
+import 'package:charge_go/controller/nearest_station.dart';
+import 'package:charge_go/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -18,6 +20,12 @@ class MapController{
 
   HashSet<Marker> marker = HashSet<Marker>();
 
+  NearestStation nearestStation = NearestStation();
+
+
+  BitmapDescriptor myLocationMarkerIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor homeMarkerIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor stationMarkerIcon = BitmapDescriptor.defaultMarker;
 
   MapController(this._controller, this._initialCameraPosition,);
 
@@ -60,8 +68,8 @@ class MapController{
       ),
       MapIconWidget(
         iconData: Icons.list,
-        callback: () {
-          Navigator.pushNamed(context, ChargingPointScreen.routeScreen);
+        callback: () async{
+          Navigator.pushNamed(context, ChargingPointScreen.routeScreen, arguments: {'stations': await nearestStation.nearestStation(LatLng(locationData.latitude!, locationData.longitude!))});
         },
       ),
       MapIconWidget(
@@ -74,4 +82,18 @@ class MapController{
   }
 
 
+
+  void addCustomMarker(String path) {
+    ImageConfiguration configuration =
+    const ImageConfiguration(size: Size(100, 100));
+    BitmapDescriptor.fromAssetImage(configuration, path).then((icon) {
+      if (path.contains("assets/images/myLocation.png")) {
+        myLocationMarkerIcon = icon;
+      } else if (path.contains("assets/images/home-chtarge.webp")) {
+        homeMarkerIcon = icon;
+      } else {
+        stationMarkerIcon = icon;
+      }
+    });
+  }
 }

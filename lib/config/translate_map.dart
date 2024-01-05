@@ -14,6 +14,7 @@ mixin AppLocale {
   static const String language = 'language';
   static const String myLocation = 'myLocation';
   static const String location = 'location';
+  static const String references = 'References';
 
   static const Map<String, dynamic> EN = {
     mapNav: 'Map',
@@ -27,7 +28,8 @@ mixin AppLocale {
     home: 'Home',
     language: 'language',
     myLocation:'Current Location',
-    location: 'Where to?'
+    location: 'Where to?',
+    references:'References'
   };
   static const Map<String, dynamic> AR = {
     mapNav: 'خريطة',
@@ -41,6 +43,7 @@ mixin AppLocale {
     home: 'بيت',
     language: 'اللغة',
     myLocation:'موقعي الحالي',
-    location:'الى'
+    location:'الى',
+    references:'مراجع'
   };
 }

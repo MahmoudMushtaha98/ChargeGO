@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/controller/map_controller.dart';
-import 'package:charge_go/controller/nearest_station.dart';
 import 'package:charge_go/model/station_model.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../main.dart';
 
@@ -25,25 +24,19 @@ class _MapScreenState extends State<MapScreen> {
         zoom: 15),
   );
 
+  List<LatLng> dest = [];
+  Set<Polyline> polyLine = <Polyline>{};
+
   @override
   void initState() {
     if (appLang.contains('ar')) {
       FlutterLocalization.instance.translate('ar');
     }
-    addCustomMarker();
+    mapController.addCustomMarker("assets/images/myLocation.png");
+    mapController.addCustomMarker("assets/images/home-chtarge.webp");
+    mapController.addCustomMarker("assets/images/station-charge.png");
     super.initState();
   }
-  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
-  void addCustomMarker() {
-    ImageConfiguration configuration =
-    const ImageConfiguration(size: Size(100, 100));
-    BitmapDescriptor.fromAssetImage(configuration, "assets/images/myLocation.png")
-        .then((icon) {
-      markerIcon = icon;
-    });
-  }
-
-  NearestStation nearestStation = NearestStation();
 
   @override
   Widget build(BuildContext context) {
@@ -55,30 +48,57 @@ class _MapScreenState extends State<MapScreen> {
               initialCameraPosition: mapController.initialCameraPosition,
               onMapCreated: (controller) async {
                 mapController.controller.complete(controller);
-                List<StationsModel> list = await nearestStation.nearestStation(
-                    LatLng(locationData.latitude!, locationData.longitude!));
+                List<StationsModel> list = await mapController.nearestStation
+                    .nearestStation(LatLng(
+                        locationData.latitude!, locationData.longitude!));
                 setState(() {
                   mapController.marker.add(
                     Marker(
                         markerId: const MarkerId('current location'),
                         position: LatLng(
                             locationData.latitude!, locationData.longitude!),
-                      icon:markerIcon
-                    ),
+                        icon: mapController.myLocationMarkerIcon),
                   );
                 });
                 for (var element in list) {
-                 setState(() {
-                   mapController.marker.add(Marker(
-                       markerId: MarkerId(
-                         element.id,
-                       ),
-                       position: element.latLng));
-                 });
+                  setState(() {
+                    mapController.marker.add(Marker(
+                      markerId: MarkerId(
+                        '${element.id}',
+                      ),
+                      position: element.latLng,
+                      icon: mapController.stationMarkerIcon,
+                      onTap: () async {
+                        PolylinePoints polylinePoints = PolylinePoints();
+                        PolylineResult result =
+                            await polylinePoints.getRouteBetweenCoordinates(
+                                'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
+                                PointLatLng(locationData.latitude!,
+                                    locationData.longitude!),
+                                PointLatLng(element.latLng.latitude,
+                                    element.latLng.longitude));
+                        if (mounted) {
+                          dest.clear();
+                          for (var element in result.points) {
+                            dest.add(
+                                LatLng(element.latitude, element.longitude));
+                          }
+                          setState(() {
+                            polyLine.clear();
+                            polyLine.add(Polyline(
+                              color: Colors.green,
+                                polylineId: PolylineId('${element.id}'),
+                                points: dest),);
+                          });
+                        }
+                      },
+                    ));
+                  });
                 }
               },
-              mapType: MapType.hybrid,
+              mapType: MapType.terrain,
               markers: mapController.marker,
+              polylines: polyLine,
             ),
             Padding(
               padding: EdgeInsets.all(widthOrHeight0(context, 1) * 0.04),
@@ -110,11 +130,50 @@ class _MapScreenState extends State<MapScreen> {
                                 AppLocale.searchLocation.getString(context),
                             prefixIcon: const Icon(Icons.search),
                             suffixIcon: IconButton(
-                                onPressed: () {
-                                  NearestStation neare = NearestStation();
-                                  neare.nearestStation(LatLng(
-                                      locationData.latitude!,
-                                      locationData.longitude!));
+                                onPressed: () async {
+                                  // List<StationsModel> list =
+                                  //     await nearestStation.nearestStation(
+                                  //         LatLng(locationData.latitude!,
+                                  //             locationData.longitude!));
+                                  // Dio dio = Dio();
+                                  // List chargeType = [
+                                  //   'Tesla Supercharger CCS',
+                                  //   'Tesla Supercharger Euro',
+                                  //   'Type 3c',
+                                  //   'Type 2',
+                                  //   'Combo CCS EU',
+                                  //   'Caravan plug'
+                                  // ];
+                                  // int counter = 0;
+                                  // if(mounted){
+                                  //   for (var element in list) {
+                                  //     try {
+                                  //       final response = await dio.post(
+                                  //         'http://192.168.1.6:8080/insert-data',
+                                  //         data: {
+                                  //           'lat': element.latLng.latitude,
+                                  //           'lng': element.latLng.longitude,
+                                  //           'name': element.name,
+                                  //           'type': 'Station',
+                                  //           'chargeType': chargeType[counter],
+                                  //           'rate': element.rate,
+                                  //           'open': '7 AM - 12 PM'
+                                  //         },
+                                  //       );
+                                  //
+                                  //       print(response.data);
+                                  //     } catch (e) {
+                                  //       print(e);
+                                  //     }
+                                  //     if(mounted){
+                                  //       if(counter == chargeType.length-1) {
+                                  //         counter=0;
+                                  //       } else {
+                                  //         counter++;
+                                  //       }
+                                  //     }
+                                  //   }
+                                  // }
                                 },
                                 icon: const Icon(
                                   Icons.play_arrow_rounded,
@@ -168,4 +227,11 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
+}
+
+enum ChargeType {
+  type2,
+  euDomestic,
+  comboCcsEu,
+  type3c,
 }

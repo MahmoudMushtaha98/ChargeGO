@@ -18,74 +18,116 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   SettingController settingController = SettingController();
 
+  List<String> references = ['English', 'عربي'];
+  bool display = false;
+
   @override
   Widget build(BuildContext context) {
     settingController.selectedLanguage =
         appLang.contains('en') ? appLang : 'ar';
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(
-              Icons.close,
-              color: Colors.black,
-              size: widthOrHeight0(context, 1) * 0.05,
-            )),
-        title: Text(
-          AppLocale.settingNav.getString(context),
-          style: TextStyle(
-              fontSize: widthOrHeight0(context, 1) * 0.03,
-              fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: const Color(0xffFFFFFF),
+      body: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: widthOrHeight0(context, 0) * 0.05,
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: widthOrHeight0(context, 1) * 0.02,
-                    right: widthOrHeight0(context, 1) * 0.02),
-                child: Text(
-                  AppLocale.filter.getString(context),
-                  style: TextStyle(
-                      fontSize: widthOrHeight0(context, 1) * 0.025,
-                      color: Colors.grey),
-                ),
-              ),
-              SizedBox(
-                height: widthOrHeight0(context, 0) * 0.05,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          Container(
+            alignment: Alignment.topCenter,
+            width: double.infinity,
+            height: widthOrHeight0(context, 0) * 0.3,
+            decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.5),
+                borderRadius: BorderRadius.only(
+                    bottomLeft:
+                        Radius.circular(widthOrHeight0(context, 1) * 0.1),
+                    bottomRight:
+                        Radius.circular(widthOrHeight0(context, 1) * 0.1))),
+            child: Padding(
+              padding: EdgeInsets.only(top: widthOrHeight0(context, 0) * 0.05),
+              child: Row(
                 children: [
-                  SizedBox(
-                    width: widthOrHeight0(context, 1) * 0.45,
-                    height: widthOrHeight0(context, 0) * 0.25,
-                    child: Column(
+                  IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.black87,
+                        size: widthOrHeight0(context, 1) * 0.05,
+                      )),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: widthOrHeight0(context, 1) * 0.08),
+                    child: Text(
+                      'Settings',
+                      style: TextStyle(
+                          fontSize: widthOrHeight0(context, 1) * 0.05,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const SizedBox(
+                width: double.infinity,
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                    left: widthOrHeight0(context, 1) * 0.01,
+                    right: widthOrHeight0(context, 1) * 0.01,
+                    top: widthOrHeight0(context, 0) * 0.02),
+                width: widthOrHeight0(context, 1) * 0.45,
+                height: widthOrHeight0(context, 0) * 0.8,
+                decoration: const BoxDecoration(
+                    color: Color(0xffF5F5F5),
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(10))),
+                child: Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
+                        Text(
+                          AppLocale.filter.getString(context),
+                          style: TextStyle(
+                            fontSize: widthOrHeight0(context, 1) * 0.025,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xff828181),
+                          ),
+                        ),
+                        SizedBox(
+                          height: widthOrHeight0(context, 0) * 0.01,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: widthOrHeight0(context, 0) * 0.06,
+                          decoration: const BoxDecoration(
+                              color: Color(0xffFFFFFF),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.max,
                             children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.ev_station,
-                                      size: widthOrHeight0(context, 1) * 0.05),
-                                  SizedBox(
-                                    width: widthOrHeight0(context, 1) * 0.02,
-                                  ),
-                                  Text(AppLocale.station.getString(context),
-                                      style: TextStyle(
-                                          fontSize: widthOrHeight0(context, 1) *
-                                              0.025,
-                                          fontWeight: FontWeight.bold)),
-                                ],
+                              SizedBox(
+                                width: widthOrHeight0(context, 1) * 0.3,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.ev_station,
+                                        size:
+                                            widthOrHeight0(context, 1) * 0.05),
+                                    SizedBox(
+                                      width: widthOrHeight0(context, 1) * 0.02,
+                                    ),
+                                    Text(AppLocale.station.getString(context),
+                                        style: TextStyle(
+                                            fontSize:
+                                                widthOrHeight0(context, 1) *
+                                                    0.025,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
                               ),
                               Switch(
                                 value: settingController.station,
@@ -99,26 +141,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ],
                           ),
                         ),
-                        Expanded(
+                        SizedBox(
+                          height: widthOrHeight0(context, 0) * 0.015,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: widthOrHeight0(context, 0) * 0.06,
+                          decoration: const BoxDecoration(
+                              color: Color(0xffFFFFFF),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.max,
                             children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.home,
-                                      size: widthOrHeight0(context, 1) * 0.05),
-                                  SizedBox(
-                                    width: widthOrHeight0(context, 1) * 0.02,
-                                  ),
-                                  Text(AppLocale.home.getString(context),
-                                      style: TextStyle(
-                                          fontSize: widthOrHeight0(context, 1) *
-                                              0.025,
-                                          fontWeight: FontWeight.bold)),
-                                ],
+                              SizedBox(
+                                width: widthOrHeight0(context, 1) * 0.3,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.home,
+                                        size:
+                                            widthOrHeight0(context, 1) * 0.05),
+                                    SizedBox(
+                                      width: widthOrHeight0(context, 1) * 0.02,
+                                    ),
+                                    Text(AppLocale.home.getString(context),
+                                        style: TextStyle(
+                                            fontSize:
+                                                widthOrHeight0(context, 1) *
+                                                    0.025,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
                               ),
                               Switch(
-                                value: settingController.home,
+                                value: settingController.station,
                                 onChanged: (value) {
                                   setState(() {
                                     settingController.home = value;
@@ -128,98 +185,132 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: widthOrHeight0(context, 0) * 0.05,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    left: widthOrHeight0(context, 1) * 0.02,
-                    right: widthOrHeight0(context, 1) * 0.02),
-                child: Text(
-                  AppLocale.language.getString(context),
-                  style: TextStyle(
-                      fontSize: widthOrHeight0(context, 1) * 0.025,
-                      color: Colors.grey),
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: widthOrHeight0(context, 0) * 0.05,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: widthOrHeight0(context, 1) * 0.02,right: widthOrHeight0(context, 1) * 0.02),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                        ),
+                        SizedBox(
+                          height: widthOrHeight0(context, 0) * 0.06,
+                        ),
                         Text(
-                          'English',
+                          AppLocale.references.getString(context),
                           style: TextStyle(
-                              fontSize: widthOrHeight0(context, 1)*0.025, fontWeight: FontWeight.bold),
+                            fontSize: widthOrHeight0(context, 1) * 0.025,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xff828181),
+                          ),
                         ),
-                        Radio(
-                          fillColor: settingController.selectedLanguage!
-                                  .contains('en')
-                              ? const MaterialStatePropertyAll(Color(0xff39b6fe))
-                              : null,
-                          value: 'en',
-                          groupValue: settingController.selectedLanguage,
-                          onChanged: (value) {
-                            setState(() async {
-                              SharedPreferences sharedPreferences =
-                                  await SharedPreferences.getInstance();
-                              settingController.selectedLanguage =
-                                  value.toString();
-                              settingController.localization.translate('en');
-                              sharedPreferences.setString('lang', 'en');
-                              appLang = 'en';
-                            });
-                          },
+                        SizedBox(
+                          height: widthOrHeight0(context, 0) * 0.01,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: display?widthOrHeight0(context, 0) * 0.2:widthOrHeight0(context, 0) * 0.06,
+                          decoration: const BoxDecoration(
+                              color: Color(0xffFFFFFF),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left:
+                                                widthOrHeight0(context, 1) * 0.015,
+                                            right:
+                                                widthOrHeight0(context, 1) * 0.01),
+                                        child: Icon(Icons.language,
+                                            size:
+                                                widthOrHeight0(context, 1) * 0.05),
+                                      ),
+                                      Text(AppLocale.language.getString(context),
+                                          style: TextStyle(
+                                              fontSize: widthOrHeight0(context, 1) *
+                                                  0.025,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                  const SizedBox(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            right:
+                                                widthOrHeight0(context, 1) * 0.01),
+                                        child: Text(
+                                          settingController.selectedLanguage!.contains('en')?'English':'عربي',
+                                          style: TextStyle(
+                                              fontSize:
+                                                  widthOrHeight0(context, 1) * 0.02,
+                                              color: const Color(0xff908D8D),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              display = !display;
+                                            });
+                                          },
+                                          icon: display?const Icon(Icons.keyboard_arrow_down): const Icon(Icons.arrow_forward_ios))
+                                    ],
+                                  )
+                                ],
+                              ),
+                              if(display)...[
+                                const Divider(),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() async {
+                                      SharedPreferences sharedPreferences =
+                                      await SharedPreferences.getInstance();
+                                      settingController.selectedLanguage =
+                                          'ar';
+                                      settingController.localization
+                                          .translate('ar');
+                                      sharedPreferences.setString('lang', 'ar');
+                                      appLang = 'ar';
+                                      display = false;
+                                    });
+                                  },
+                                  child: Text('عربي',style: TextStyle(
+                                      fontSize: widthOrHeight0(context, 1) *
+                                          0.025,
+                                      fontWeight: FontWeight.bold)),
+                                ),
+                                const Divider(),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() async {
+                                      display = false;
+                                      SharedPreferences sharedPreferences =
+                                      await SharedPreferences.getInstance();
+                                      settingController.selectedLanguage =
+                                          'en';
+                                      settingController.localization
+                                          .translate('en');
+                                      sharedPreferences.setString('lang', 'en');
+                                      appLang = 'en';
+                                    });
+                                  },
+                                  child: Text('English',style: TextStyle(
+                                      fontSize: widthOrHeight0(context, 1) *
+                                          0.025,
+                                      fontWeight: FontWeight.bold)),
+                                )
+                              ]
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('عربي',
-                            style: TextStyle(
-                                fontSize: widthOrHeight0(context, 1)*0.025, fontWeight: FontWeight.bold)),
-                        Radio(
-                          focusColor: const Color(0xff39b6fe),
-                          fillColor: settingController.selectedLanguage!
-                                  .contains('ar')
-                              ? const MaterialStatePropertyAll(Color(0xff39b6fe))
-                              : null,
-                          activeColor: Colors.black,
-                          value: 'ar',
-                          groupValue: settingController.selectedLanguage,
-                          onChanged: (value) {
-                            setState(() async {
-                              SharedPreferences sharedPreferences =
-                                  await SharedPreferences.getInstance();
-                              settingController.selectedLanguage =
-                                  value.toString();
-                              settingController.localization.translate('ar');
-                              sharedPreferences.setString('lang', 'ar');
-                              appLang = 'ar';
-                            });
-                          },
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),
