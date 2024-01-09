@@ -7,7 +7,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   static const screenRoute = '/home-screen';
 

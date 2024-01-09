@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_search_advance/google_maps_place_search_advance.dart';
+import 'package:location/location.dart';
 import '../../main.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  const MapScreen({Key? key, this.latLng}) : super(key: key);
+
+  final LatLng? latLng;
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -38,15 +42,42 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
   }
 
+  void polyLineFromChargePoint() async {
+    if (widget.latLng != null) {
+      PolylinePoints polylinePoints = PolylinePoints();
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
+          PointLatLng(locationData.latitude!, locationData.longitude!),
+          PointLatLng(widget.latLng!.latitude, widget.latLng!.longitude));
+      if (mounted) {
+        dest.clear();
+        for (var element in result.points) {
+          dest.add(LatLng(element.latitude, element.longitude));
+        }
+        setState(() {
+          polyLine.clear();
+          polyLine.add(
+            Polyline(
+                color: Colors.green,
+                polylineId: const PolylineId('selected'),
+                points: dest),
+          );
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             GoogleMap(
               initialCameraPosition: mapController.initialCameraPosition,
               onMapCreated: (controller) async {
+                polyLineFromChargePoint();
                 mapController.controller.complete(controller);
                 List<StationsModel> list = await mapController.nearestStation
                     .nearestStation(LatLng(
@@ -85,10 +116,12 @@ class _MapScreenState extends State<MapScreen> {
                           }
                           setState(() {
                             polyLine.clear();
-                            polyLine.add(Polyline(
-                              color: Colors.green,
-                                polylineId: PolylineId('${element.id}'),
-                                points: dest),);
+                            polyLine.add(
+                              Polyline(
+                                  color: Colors.green,
+                                  polylineId: PolylineId('${element.id}'),
+                                  points: dest),
+                            );
                           });
                         }
                       },
@@ -101,88 +134,37 @@ class _MapScreenState extends State<MapScreen> {
               polylines: polyLine,
             ),
             Padding(
-              padding: EdgeInsets.all(widthOrHeight0(context, 1) * 0.04),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      height: widthOrHeight0(context, 1) * 0.07,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 0.3,
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ]),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            hintText:
-                                AppLocale.searchLocation.getString(context),
-                            prefixIcon: const Icon(Icons.search),
-                            suffixIcon: IconButton(
-                                onPressed: () async {
-                                  // List<StationsModel> list =
-                                  //     await nearestStation.nearestStation(
-                                  //         LatLng(locationData.latitude!,
-                                  //             locationData.longitude!));
-                                  // Dio dio = Dio();
-                                  // List chargeType = [
-                                  //   'Tesla Supercharger CCS',
-                                  //   'Tesla Supercharger Euro',
-                                  //   'Type 3c',
-                                  //   'Type 2',
-                                  //   'Combo CCS EU',
-                                  //   'Caravan plug'
-                                  // ];
-                                  // int counter = 0;
-                                  // if(mounted){
-                                  //   for (var element in list) {
-                                  //     try {
-                                  //       final response = await dio.post(
-                                  //         'http://192.168.1.6:8080/insert-data',
-                                  //         data: {
-                                  //           'lat': element.latLng.latitude,
-                                  //           'lng': element.latLng.longitude,
-                                  //           'name': element.name,
-                                  //           'type': 'Station',
-                                  //           'chargeType': chargeType[counter],
-                                  //           'rate': element.rate,
-                                  //           'open': '7 AM - 12 PM'
-                                  //         },
-                                  //       );
-                                  //
-                                  //       print(response.data);
-                                  //     } catch (e) {
-                                  //       print(e);
-                                  //     }
-                                  //     if(mounted){
-                                  //       if(counter == chargeType.length-1) {
-                                  //         counter=0;
-                                  //       } else {
-                                  //         counter++;
-                                  //       }
-                                  //     }
-                                  //   }
-                                  // }
-                                },
-                                icon: const Icon(
-                                  Icons.play_arrow_rounded,
-                                  color: Colors.blue,
-                                ))),
-                      ),
-                    ),
-                  ),
-                ],
+              padding: EdgeInsets.only(top: widthOrHeight0(context, 0)*0.05),
+              child: SizedBox(
+                width: widthOrHeight0(context, 1)*0.45,
+                child: GooglePlaceSearchAdvance(
+                  googleMapsApiKey: "AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w",
+                  country: "Jo",
+                  onLocationSelected: (lat, lng, address, mainText) {
+                    setState(() {
+                      Marker mark = mapController.marker.firstWhere((element) =>
+                          element.markerId.value.contains('current location'));
+
+                      mapController.marker.remove(mark);
+                      mapController.marker.add(
+                        Marker(
+                            markerId: const MarkerId('current location'),
+                            position: LatLng(lat, lng),
+                            icon: mapController.myLocationMarkerIcon),
+                      );
+                      LocationData lo =LocationData.fromMap({"latitude": lat, "longitude": lng});
+                      mapController.animateCamera(lo);
+
+                      // Marker(
+                      //     markerId: const MarkerId('current location'),
+                      //     position: LatLng(lat, lng),
+                      //     icon: mapController.myLocationMarkerIcon);
+                      // mapController.nearestStation.stations.clear();
+                      // mapController.nearestStation.nearestStation(LatLng(lat, lng));
+                    });
+                  },
+                  lightTheme: true,
+                ),
               ),
             ),
             Column(
@@ -227,11 +209,4 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
-}
-
-enum ChargeType {
-  type2,
-  euDomestic,
-  comboCcsEu,
-  type3c,
 }

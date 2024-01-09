@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:charge_go/controller/nearest_station.dart';
-import 'package:charge_go/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -47,10 +46,10 @@ class MapController{
 
   Future<void> getMyLocation() async {
     LocationData myLocation = await LocationService().getLocation();
-    _animateCamera(myLocation);
+    animateCamera(myLocation);
   }
 
-  Future<void> _animateCamera(LocationData locationData) async {
+  Future<void> animateCamera(LocationData locationData) async {
     final GoogleMapController controller = await _controller.future;
     CameraPosition cameraPosition = CameraPosition(
         target: LatLng(locationData.latitude!, locationData.longitude!),
@@ -69,7 +68,8 @@ class MapController{
       MapIconWidget(
         iconData: Icons.list,
         callback: () async{
-          Navigator.pushNamed(context, ChargingPointScreen.routeScreen, arguments: {'stations': await nearestStation.nearestStation(LatLng(locationData.latitude!, locationData.longitude!))});
+          Navigator.pushNamed(context, ChargingPointScreen.routeScreen, arguments: {'stations': nearestStation.stations},);
+
         },
       ),
       MapIconWidget(

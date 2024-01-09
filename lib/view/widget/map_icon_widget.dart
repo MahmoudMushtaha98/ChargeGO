@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import '../screen/splash_screen.dart';
 
 class MapIconWidget extends StatelessWidget {
-  const MapIconWidget({
-    super.key,
+  const MapIconWidget({Key? key,
     required this.iconData,
     required this.callback,
-  });
+  }) : super(key: key);
 
   final IconData iconData;
   final VoidCallback callback;
