@@ -21,7 +21,7 @@ class NearestStation {
     try {
       stations.clear();
       String url =
-          'http://192.168.43.181:8080/git-distance?lat=${latLng.latitude}&lng=${latLng.longitude}';
+          'http://192.168.1.6:8080/git-distance?lat=${latLng.latitude}&lng=${latLng.longitude}';
       var response = await dio.get(url);
       stationsData = response.data;
       for (var element in stationsData) {

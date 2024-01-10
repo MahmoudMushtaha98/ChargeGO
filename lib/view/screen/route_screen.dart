@@ -1,11 +1,13 @@
 import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/controller/route_controller.dart';
+import 'package:charge_go/main.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../model/station_model.dart';
 
 class RouteScreen extends StatefulWidget {
   const RouteScreen({Key? key}) : super(key: key);
@@ -17,37 +19,72 @@ class RouteScreen extends StatefulWidget {
 class _RouteScreenState extends State<RouteScreen> {
   RouteController routeController = RouteController();
 
+  @override
+  void initState() {
+    routeController.addCustomMarker('assets/images/myLocation.png');
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    routeController.controllerStart.dispose();
+    routeController.controllerEnd.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          routeController.latLong.clear();
+          routeController.polyLine.clear();
+          routeController.markers.clear();
           Map<String, dynamic> details = await routeController.positionServices
               .getPlaceId(routeController.controllerEnd.text);
-          PolylineResult result =
-              await routeController.polylinePoints.getRouteBetweenCoordinates(
+          PolylineResult result = await routeController.polylinePoints
+              .getRouteBetweenCoordinates(
                   'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
-                  const PointLatLng(31.963158, 35.930359),
+                  PointLatLng(locationData.latitude!, locationData.longitude!),
                   PointLatLng(details['geometry']['location']['lat'],
                       details['geometry']['location']['lng']));
           for (var element in result.points) {
-            routeController.latLong.add(LatLng(element.latitude, element.longitude));
+            routeController.latLong
+                .add(LatLng(element.latitude, element.longitude));
           }
 
           setState(() {
-            routeController.markers.add( const Marker(
-              markerId: MarkerId('Start'),
-              position: LatLng(31.963158, 35.930359),
-            ));
             routeController.markers.add(Marker(
-                markerId: const MarkerId('End'), position: routeController.latLong.last));
+                markerId: const MarkerId('Start'),
+                position:
+                    LatLng(locationData.latitude!, locationData.longitude!),
+                icon: routeController.myLocationMarkerIcon));
+            routeController.markers.add(Marker(
+                markerId: const MarkerId('End'),
+                position: routeController.latLong.last));
             routeController.polyLine.add(Polyline(
                 polylineId: PolylineId(
                   '${routeController.polyLine.length + 1}',
                 ),
                 points: routeController.latLong,
                 color: Colors.blue));
+          });
+          List<StationsModel> stations = [];
+          routeController.latLong.forEach((element) async {
+            stations =
+                await routeController.nearestStation.nearestStation(element);
+            if (mounted) {
+              print(stations.length);
+              stations.forEach((element) {
+                routeController.markers.add(Marker(
+                    markerId: MarkerId(element.id.toString()),
+                    position: element.latLng,icon: routeController.stationMarkerIcon));
+              });
+              stations.clear();
+              setState(() {
+
+              });
+            }
           });
         },
         child: const Text(
@@ -59,6 +96,17 @@ class _RouteScreenState extends State<RouteScreen> {
         child: Stack(
           children: [
             GoogleMap(
+              onMapCreated: (controller) {
+                setState(() {
+                  routeController.markers.add(
+                    Marker(
+                        markerId: const MarkerId('current location'),
+                        position: LatLng(
+                            locationData.latitude!, locationData.longitude!),
+                        icon: routeController.myLocationMarkerIcon),
+                  );
+                });
+              },
               markers: routeController.markers,
               initialCameraPosition: routeController.iniCameraPosition,
               zoomControlsEnabled: false,

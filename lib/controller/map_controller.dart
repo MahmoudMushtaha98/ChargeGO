@@ -9,24 +9,25 @@ import '../view/screen/charging_point_screen.dart';
 import '../view/screen/settings_screen.dart';
 import '../view/widget/map_icon_widget.dart';
 
-class MapController{
+class MapController {
+  late final Completer<GoogleMapController> _controller;
 
-  late final Completer<GoogleMapController> _controller ;
+  late final CameraPosition _initialCameraPosition;
 
-  late final CameraPosition _initialCameraPosition ;
-
-  late LatLng currentLocation ;
+  late LatLng currentLocation;
 
   HashSet<Marker> marker = HashSet<Marker>();
 
   NearestStation nearestStation = NearestStation();
 
-
   BitmapDescriptor myLocationMarkerIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor homeMarkerIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor stationMarkerIcon = BitmapDescriptor.defaultMarker;
 
-  MapController(this._controller, this._initialCameraPosition,);
+  MapController(
+    this._controller,
+    this._initialCameraPosition,
+  );
 
   Completer<GoogleMapController> get controller => _controller;
 
@@ -40,10 +41,6 @@ class MapController{
     _initialCameraPosition = value;
   }
 
-
-
-
-
   Future<void> getMyLocation() async {
     LocationData myLocation = await LocationService().getLocation();
     animateCamera(myLocation);
@@ -54,10 +51,10 @@ class MapController{
     CameraPosition cameraPosition = CameraPosition(
         target: LatLng(locationData.latitude!, locationData.longitude!),
         zoom: 17);
-    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition,));
   }
 
-  List mapIcon(BuildContext context){
+  List mapIcon(BuildContext context) {
     return [
       MapIconWidget(
         iconData: Icons.gps_fixed,
@@ -67,9 +64,12 @@ class MapController{
       ),
       MapIconWidget(
         iconData: Icons.list,
-        callback: () async{
-          Navigator.pushNamed(context, ChargingPointScreen.routeScreen, arguments: {'stations': nearestStation.stations},);
-
+        callback: () async {
+          Navigator.pushNamed(
+            context,
+            ChargingPointScreen.routeScreen,
+            arguments: {'stations': nearestStation.stations},
+          );
         },
       ),
       MapIconWidget(
@@ -81,11 +81,9 @@ class MapController{
     ];
   }
 
-
-
   void addCustomMarker(String path) {
     ImageConfiguration configuration =
-    const ImageConfiguration(size: Size(100, 100));
+        const ImageConfiguration(size: Size(100, 100));
     BitmapDescriptor.fromAssetImage(configuration, path).then((icon) {
       if (path.contains("assets/images/myLocation.png")) {
         myLocationMarkerIcon = icon;
@@ -96,4 +94,6 @@ class MapController{
       }
     });
   }
+
+
 }

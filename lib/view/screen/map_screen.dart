@@ -76,6 +76,7 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             GoogleMap(
               initialCameraPosition: mapController.initialCameraPosition,
+              zoomControlsEnabled: false,
               onMapCreated: (controller) async {
                 polyLineFromChargePoint();
                 mapController.controller.complete(controller);
@@ -134,34 +135,41 @@ class _MapScreenState extends State<MapScreen> {
               polylines: polyLine,
             ),
             Padding(
-              padding: EdgeInsets.only(top: widthOrHeight0(context, 0)*0.05),
+              padding: EdgeInsets.only(top: widthOrHeight0(context, 0) * 0.05),
               child: SizedBox(
-                width: widthOrHeight0(context, 1)*0.45,
+                width: widthOrHeight0(context, 1) * 0.45,
                 child: GooglePlaceSearchAdvance(
                   googleMapsApiKey: "AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w",
                   country: "Jo",
-                  onLocationSelected: (lat, lng, address, mainText) {
+                  onLocationSelected: (lat, lng, address, mainText) async {
                     setState(() {
-                      Marker mark = mapController.marker.firstWhere((element) =>
-                          element.markerId.value.contains('current location'));
-
-                      mapController.marker.remove(mark);
-                      mapController.marker.add(
-                        Marker(
-                            markerId: const MarkerId('current location'),
-                            position: LatLng(lat, lng),
-                            icon: mapController.myLocationMarkerIcon),
-                      );
-                      LocationData lo =LocationData.fromMap({"latitude": lat, "longitude": lng});
-                      mapController.animateCamera(lo);
-
-                      // Marker(
-                      //     markerId: const MarkerId('current location'),
-                      //     position: LatLng(lat, lng),
-                      //     icon: mapController.myLocationMarkerIcon);
-                      // mapController.nearestStation.stations.clear();
-                      // mapController.nearestStation.nearestStation(LatLng(lat, lng));
+                      mapController.marker.clear();
+                      locationData =LocationData.fromMap({"latitude": lat, "longitude": lng});
+                      mapController.marker.add(Marker(
+                          markerId: const MarkerId('current location'),
+                          icon: mapController.myLocationMarkerIcon,
+                          position: LatLng(lat, lng)));
                     });
+
+                    List<StationsModel> st = await mapController.nearestStation
+                        .nearestStation(LatLng(lat, lng));
+                    for (var element in st) {
+                      setState(() {
+                        mapController.marker.add(Marker(
+                            markerId: MarkerId(element.id.toString()),
+                            position: element.latLng,
+                            icon: mapController.stationMarkerIcon));
+                      });
+                    }
+                    mapController.animateCamera(LocationData.fromMap(
+                        {"latitude": lat, "longitude": lng}));
+
+                    // Marker(
+                    //     markerId: const MarkerId('current location'),
+                    //     position: LatLng(lat, lng),
+                    //     icon: mapController.myLocationMarkerIcon);
+                    // mapController.nearestStation.stations.clear();
+                    // mapController.nearestStation.nearestStation(LatLng(lat, lng));
                   },
                   lightTheme: true,
                 ),
