@@ -74,7 +74,6 @@ class _RouteScreenState extends State<RouteScreen> {
             stations =
                 await routeController.nearestStation.nearestStation(element);
             if (mounted) {
-              print(stations.length);
               stations.forEach((element) {
                 routeController.markers.add(Marker(
                     markerId: MarkerId(element.id.toString()),
