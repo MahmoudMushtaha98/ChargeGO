@@ -1,6 +1,8 @@
 import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/controller/route_controller.dart';
 import 'package:charge_go/main.dart';
+import 'package:charge_go/view/screen/current_location_search.dart';
+import 'package:charge_go/view/screen/end_point_screen.dart';
 import 'package:charge_go/view/screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -20,19 +22,6 @@ class _RouteScreenState extends State<RouteScreen> {
   RouteController routeController = RouteController();
 
   @override
-  void initState() {
-    routeController.addCustomMarker('assets/images/myLocation.png');
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    routeController.controllerStart.dispose();
-    routeController.controllerEnd.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -40,51 +29,70 @@ class _RouteScreenState extends State<RouteScreen> {
           routeController.latLong.clear();
           routeController.polyLine.clear();
           routeController.markers.clear();
-          Map<String, dynamic> details = await routeController.positionServices
-              .getPlaceId(routeController.controllerEnd.text);
-          PolylineResult result = await routeController.polylinePoints
-              .getRouteBetweenCoordinates(
-                  'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
-                  PointLatLng(locationData.latitude!, locationData.longitude!),
-                  PointLatLng(details['geometry']['location']['lat'],
-                      details['geometry']['location']['lng']));
-          for (var element in result.points) {
-            routeController.latLong
-                .add(LatLng(element.latitude, element.longitude));
-          }
-
-          setState(() {
-            routeController.markers.add(Marker(
-                markerId: const MarkerId('Start'),
-                position:
-                    LatLng(locationData.latitude!, locationData.longitude!),
-                icon: routeController.myLocationMarkerIcon));
-            routeController.markers.add(Marker(
-                markerId: const MarkerId('End'),
-                position: routeController.latLong.last));
-            routeController.polyLine.add(Polyline(
-                polylineId: PolylineId(
-                  '${routeController.polyLine.length + 1}',
-                ),
-                points: routeController.latLong,
-                color: Colors.blue));
-          });
-          List<StationsModel> stations = [];
-          routeController.latLong.forEach((element) async {
-            stations =
-                await routeController.nearestStation.nearestStation(element);
-            if (mounted) {
-              stations.forEach((element) {
-                routeController.markers.add(Marker(
-                    markerId: MarkerId(element.id.toString()),
-                    position: element.latLng,icon: routeController.stationMarkerIcon));
-              });
-              stations.clear();
-              setState(() {
-
-              });
+          if (routeController.endPoint != null) {
+            Map<String, dynamic> details = await routeController
+                .positionServices
+                .getPlaceId(routeController.controllerEnd.text);
+            PolylineResult result = await routeController.polylinePoints
+                .getRouteBetweenCoordinates(
+                    'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
+                    PointLatLng(routeController.startPoint!.latLng!.latitude,
+                        routeController.startPoint!.latLng!.longitude),
+                    PointLatLng(details['geometry']['location']['lat'],
+                        details['geometry']['location']['lng']));
+            for (var element in result.points) {
+              routeController.latLong
+                  .add(LatLng(element.latitude, element.longitude));
             }
-          });
+
+            setState(() {
+              routeController.markers.add(Marker(
+                  markerId: const MarkerId('Start'),
+                  position: LatLng(routeController.startPoint!.latLng!.latitude,
+                      routeController.startPoint!.latLng!.longitude),
+                  icon: routeController.myLocationMarkerIcon));
+              routeController.markers.add(Marker(
+                  markerId: const MarkerId('End'),
+                  position: LatLng(routeController.endPoint!.latLng!.latitude,
+                      routeController.endPoint!.latLng!.longitude)));
+              routeController.polyLine.add(Polyline(
+                  polylineId: PolylineId(
+                    '${routeController.polyLine.length + 1}',
+                  ),
+                  points: routeController.latLong,
+                  color: Colors.blue));
+            });
+            List<StationsModel> stations = [];
+            routeController.latLong.forEach((element) async {
+              stations =
+                  await routeController.nearestStation.nearestStation(element);
+              if (mounted) {
+                for (var element in stations) {
+                  routeController.markers.add(Marker(
+                      markerId: MarkerId(element.id.toString()),
+                      position: element.latLng!,
+                      icon: routeController.stationMarkerIcon));
+                }
+                stations.clear();
+                setState(() {});
+              }
+            });
+          } else {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Enter end point'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('OK'))
+                    ],
+                  );
+                });
+          }
         },
         child: const Text(
           'Go',
@@ -101,7 +109,8 @@ class _RouteScreenState extends State<RouteScreen> {
                     Marker(
                         markerId: const MarkerId('current location'),
                         position: LatLng(
-                            locationData.latitude!, locationData.longitude!),
+                            routeController.startPoint!.latLng!.latitude,
+                            routeController.startPoint!.latLng!.longitude),
                         icon: routeController.myLocationMarkerIcon),
                   );
                 });
@@ -161,58 +170,57 @@ class _RouteScreenState extends State<RouteScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Expanded(
-                            child: Container(
-                              alignment: Alignment.bottomLeft,
-                              child: TextFormField(
-                                controller: routeController.controllerStart,
-                                onTap: () {
-                                  setState(() {
-                                    routeController.onTapCur = true;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  label: routeController.onTapCur
-                                      ? null
-                                      : Text(
-                                          AppLocale.myLocation
-                                              .getString(context),
-                                          style: TextStyle(
-                                              fontSize:
-                                                  widthOrHeight0(context, 1) *
-                                                      0.027),
-                                        ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.blue)),
-                                ),
-                              ),
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return CurrentLocationSearch(
+                                        startPoint: addStartPoint,
+                                      );
+                                    });
+                              },
+                              child: Container(
+
+                                  alignment: appLang.contains('ar')?Alignment.bottomRight:Alignment.bottomLeft,
+                                  child: Text(
+                                    appLang.contains('ar') && routeController.startPoint?.id==0
+                                        ? AppLocale.currentLocation.getString(context)
+                                        : routeController.startPoint!.name!,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize:
+                                            widthOrHeight0(context, 0) * 0.025,
+                                        overflow: TextOverflow.ellipsis),
+                                  )),
                             ),
                           ),
                           const Divider(),
                           Expanded(
-                            child: Container(
-                              alignment: Alignment.topLeft,
-                              child: TextFormField(
-                                controller: routeController.controllerEnd,
-                                onTap: () {
-                                  setState(() {
-                                    routeController.onTapWh = true;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                    label: routeController.onTapWh
-                                        ? null
-                                        : Text(
-                                            AppLocale.location
-                                                .getString(context),
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize:
-                                                    widthOrHeight0(context, 1) *
-                                                        0.025),
-                                          ),
-                                    focusedBorder: InputBorder.none,
-                                    border: InputBorder.none),
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return EndPointScreen(
+                                        endPoint: addEndPoint,
+                                      );
+                                    });
+                              },
+                              child: Container(
+                                alignment: appLang.contains('ar')?Alignment.topRight:Alignment.topLeft,
+                                child: Text(
+                                  routeController.endPoint?.name ??
+                                      AppLocale.whereYouGo.getString(context),
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize:
+                                        widthOrHeight0(context, 0) * 0.025,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -240,7 +248,30 @@ class _RouteScreenState extends State<RouteScreen> {
                   'latitude: ${argument.latitude}, longitude: ${argument.longitude}')));
     });
   }
-// Future<void> _goToPlace(LatLng latLng)async{
-//   final GoogleMapController controller = await routeController.
-// }
+
+  void addStartPoint(StationsModel startPoint) async {
+    //startPoint.latLng!.latitude,startPoint.latLng!.longitude
+    setState(() {
+      routeController.startPoint = startPoint;
+    });
+  }
+
+  void addEndPoint(StationsModel endPoint) {
+    setState(() {
+      routeController.endPoint = endPoint;
+    });
+  }
+
+  @override
+  void initState() {
+    routeController.addCustomMarker('assets/images/myLocation.png');
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    routeController.controllerStart.dispose();
+    routeController.controllerEnd.dispose();
+    super.dispose();
+  }
 }

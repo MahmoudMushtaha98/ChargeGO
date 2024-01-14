@@ -98,7 +98,7 @@ class _MapScreenState extends State<MapScreen> {
                       markerId: MarkerId(
                         '${element.id}',
                       ),
-                      position: element.latLng,
+                      position: element.latLng!,
                       icon: mapController.stationMarkerIcon,
                       onTap: () async {
                         PolylinePoints polylinePoints = PolylinePoints();
@@ -107,8 +107,8 @@ class _MapScreenState extends State<MapScreen> {
                                 'AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w',
                                 PointLatLng(locationData.latitude!,
                                     locationData.longitude!),
-                                PointLatLng(element.latLng.latitude,
-                                    element.latLng.longitude));
+                                PointLatLng(element.latLng!.latitude,
+                                    element.latLng!.longitude));
                         if (mounted) {
                           dest.clear();
                           for (var element in result.points) {
@@ -136,8 +136,22 @@ class _MapScreenState extends State<MapScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(top: widthOrHeight0(context, 0) * 0.05),
-              child: SizedBox(
+              child: Container(
                 width: widthOrHeight0(context, 1) * 0.45,
+                decoration: BoxDecoration(
+                    color: Theme
+                        .of(context)
+                        .scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        spreadRadius: 0.5,
+                        blurRadius: 30,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                ),
                 child: GooglePlaceSearchAdvance(
                   googleMapsApiKey: "AIzaSyAWIUhxGIS4R0YoVevm1-XGs1kiqc5Ak_w",
                   country: "Jo",
@@ -157,21 +171,16 @@ class _MapScreenState extends State<MapScreen> {
                       setState(() {
                         mapController.marker.add(Marker(
                             markerId: MarkerId(element.id.toString()),
-                            position: element.latLng,
+                            position: element.latLng!,
                             icon: mapController.stationMarkerIcon));
                       });
                     }
                     mapController.animateCamera(LocationData.fromMap(
                         {"latitude": lat, "longitude": lng}));
 
-                    // Marker(
-                    //     markerId: const MarkerId('current location'),
-                    //     position: LatLng(lat, lng),
-                    //     icon: mapController.myLocationMarkerIcon);
-                    // mapController.nearestStation.stations.clear();
-                    // mapController.nearestStation.nearestStation(LatLng(lat, lng));
                   },
                   lightTheme: true,
+                  hintText: 'Location details',
                 ),
               ),
             ),

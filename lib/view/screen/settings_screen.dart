@@ -55,7 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: EdgeInsets.only(
                         left: widthOrHeight0(context, 1) * 0.08),
                     child: Text(
-                      'Settings',
+                      AppLocale.settingNav.getString(context),
                       style: TextStyle(
                           fontSize: widthOrHeight0(context, 1) * 0.05,
                           fontWeight: FontWeight.bold),

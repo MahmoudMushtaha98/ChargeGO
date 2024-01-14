@@ -36,7 +36,7 @@ class ChargingPointWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
-                    stationsModel.type.contains('Station')?Icons.ev_station:Icons.home,
+                    stationsModel.type!.contains('Station')?Icons.ev_station:Icons.home,
                     size: widthOrHeight0(context, 1) * 0.05,
                     color: Colors.amber,
                   ),
@@ -68,7 +68,7 @@ class ChargingPointWidget extends StatelessWidget {
                 ],
               ),
               Text(
-                stationsModel.name,
+                stationsModel.name!,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: widthOrHeight0(context, 1) * 0.026,
