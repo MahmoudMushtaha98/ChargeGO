@@ -27,11 +27,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     localization.init(
       mapLocales: [
-        const MapLocale('en', AppLocale.EN),
-        const MapLocale('ar', AppLocale.AR),
+        const MapLocale('en', AppLocale.EN,fontFamily: 'Oswald'),
+        const MapLocale('ar', AppLocale.AR,fontFamily: 'Cairo'),
       ],
       initLanguageCode: appLang == '' ? 'en' : appLang,
-    );
+
+    ).then((value) {
+    });
     localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
   }
@@ -47,6 +49,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       supportedLocales: const [Locale('en', 'US'), Locale('ar', 'AR')],
       localizationsDelegates: localization.localizationsDelegates,
+      theme: ThemeData(fontFamily: localization.fontFamily),
       routes: routes(),
       home: const SplashScreen(),
     );

@@ -21,6 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   List<String> references = ['English', 'عربي'];
   bool display = false;
 
+
+
   @override
   Widget build(BuildContext context) {
     settingController.selectedLanguage =
@@ -58,9 +60,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       AppLocale.settingNav.getString(context),
                       style: TextStyle(
                           fontSize: widthOrHeight0(context, 1) * 0.05,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  )
+                  ),
+
                 ],
               ),
             ),
@@ -202,7 +206,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         Container(
                           width: double.infinity,
-                          height: display?widthOrHeight0(context, 0) * 0.2:widthOrHeight0(context, 0) * 0.06,
+                          height: display
+                              ? widthOrHeight0(context, 0) * 0.2
+                              : widthOrHeight0(context, 0) * 0.06,
                           decoration: const BoxDecoration(
                               color: Color(0xffFFFFFF),
                               borderRadius:
@@ -211,7 +217,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Row(
@@ -220,18 +227,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            left:
-                                                widthOrHeight0(context, 1) * 0.015,
-                                            right:
-                                                widthOrHeight0(context, 1) * 0.01),
+                                            left: widthOrHeight0(context, 1) *
+                                                0.015,
+                                            right: widthOrHeight0(context, 1) *
+                                                0.01),
                                         child: Icon(Icons.language,
-                                            size:
-                                                widthOrHeight0(context, 1) * 0.05),
+                                            size: widthOrHeight0(context, 1) *
+                                                0.05),
                                       ),
-                                      Text(AppLocale.language.getString(context),
+                                      Text(
+                                          AppLocale.language.getString(context),
                                           style: TextStyle(
-                                              fontSize: widthOrHeight0(context, 1) *
-                                                  0.025,
+                                              fontSize:
+                                                  widthOrHeight0(context, 1) *
+                                                      0.025,
                                               fontWeight: FontWeight.bold)),
                                     ],
                                   ),
@@ -242,13 +251,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            right:
-                                                widthOrHeight0(context, 1) * 0.01),
+                                            right: widthOrHeight0(context, 1) *
+                                                0.01),
                                         child: Text(
-                                          settingController.selectedLanguage!.contains('en')?'English':'عربي',
+                                          settingController.selectedLanguage!
+                                                  .contains('en')
+                                              ? 'English'
+                                              : 'عربي',
                                           style: TextStyle(
                                               fontSize:
-                                                  widthOrHeight0(context, 1) * 0.02,
+                                                  widthOrHeight0(context, 1) *
+                                                      0.02,
                                               color: const Color(0xff908D8D),
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -259,20 +272,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                               display = !display;
                                             });
                                           },
-                                          icon: display?const Icon(Icons.keyboard_arrow_down): const Icon(Icons.arrow_forward_ios))
+                                          icon: display
+                                              ? const Icon(
+                                                  Icons.keyboard_arrow_down)
+                                              : const Icon(
+                                                  Icons.arrow_forward_ios))
                                     ],
                                   )
                                 ],
                               ),
-                              if(display)...[
+                              if (display) ...[
                                 const Divider(),
                                 GestureDetector(
                                   onTap: () {
                                     setState(() async {
                                       SharedPreferences sharedPreferences =
-                                      await SharedPreferences.getInstance();
-                                      settingController.selectedLanguage =
-                                          'ar';
+                                          await SharedPreferences.getInstance();
+                                      settingController.selectedLanguage = 'ar';
                                       settingController.localization
                                           .translate('ar');
                                       sharedPreferences.setString('lang', 'ar');
@@ -280,10 +296,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       display = false;
                                     });
                                   },
-                                  child: Text('عربي',style: TextStyle(
-                                      fontSize: widthOrHeight0(context, 1) *
-                                          0.025,
-                                      fontWeight: FontWeight.bold)),
+                                  child: Text('عربي',
+                                      style: TextStyle(
+                                          fontSize: widthOrHeight0(context, 1) *
+                                              0.025,
+                                          fontWeight: FontWeight.bold)),
                                 ),
                                 const Divider(),
                                 GestureDetector(
@@ -291,19 +308,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     setState(() async {
                                       display = false;
                                       SharedPreferences sharedPreferences =
-                                      await SharedPreferences.getInstance();
-                                      settingController.selectedLanguage =
-                                          'en';
+                                          await SharedPreferences.getInstance();
+                                      settingController.selectedLanguage = 'en';
                                       settingController.localization
                                           .translate('en');
                                       sharedPreferences.setString('lang', 'en');
                                       appLang = 'en';
                                     });
                                   },
-                                  child: Text('English',style: TextStyle(
-                                      fontSize: widthOrHeight0(context, 1) *
-                                          0.025,
-                                      fontWeight: FontWeight.bold)),
+                                  child: Text('English',
+                                      style: TextStyle(
+                                          fontSize: widthOrHeight0(context, 1) *
+                                              0.025,
+                                          fontWeight: FontWeight.bold)),
                                 )
                               ]
                             ],

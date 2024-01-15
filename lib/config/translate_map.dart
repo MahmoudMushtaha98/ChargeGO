@@ -53,3 +53,5 @@ mixin AppLocale {
     whereYouGo:'اين وجهتك؟'
   };
 }
+
+
