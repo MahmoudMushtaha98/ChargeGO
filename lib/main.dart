@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     localization.init(
       mapLocales: [
-        const MapLocale('en', AppLocale.EN,fontFamily: 'Oswald'),
+        const MapLocale('en', AppLocale.EN,),
         const MapLocale('ar', AppLocale.AR,fontFamily: 'Cairo'),
       ],
       initLanguageCode: appLang == '' ? 'en' : appLang,

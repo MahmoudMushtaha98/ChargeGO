@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:charge_go/config/translate_map.dart';
 import 'package:charge_go/controller/route_controller.dart';
 import 'package:charge_go/main.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../../model/station_model.dart';
 
 class RouteScreen extends StatefulWidget {
@@ -20,6 +20,7 @@ class RouteScreen extends StatefulWidget {
 
 class _RouteScreenState extends State<RouteScreen> {
   RouteController routeController = RouteController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +105,7 @@ class _RouteScreenState extends State<RouteScreen> {
           children: [
             GoogleMap(
               onMapCreated: (controller) {
+                routeController.completer.complete(controller);
                 setState(() {
                   routeController.markers.add(
                     Marker(
@@ -182,11 +184,14 @@ class _RouteScreenState extends State<RouteScreen> {
                                     });
                               },
                               child: Container(
-
-                                  alignment: appLang.contains('ar')?Alignment.bottomRight:Alignment.bottomLeft,
+                                  alignment: appLang.contains('ar')
+                                      ? Alignment.bottomRight
+                                      : Alignment.bottomLeft,
                                   child: Text(
-                                    appLang.contains('ar') && routeController.startPoint?.id==0
-                                        ? AppLocale.currentLocation.getString(context)
+                                    appLang.contains('ar') &&
+                                            routeController.startPoint?.id == 0
+                                        ? AppLocale.currentLocation
+                                            .getString(context)
                                         : routeController.startPoint!.name!,
                                     maxLines: 1,
                                     style: TextStyle(
@@ -210,16 +215,21 @@ class _RouteScreenState extends State<RouteScreen> {
                                     });
                               },
                               child: Container(
-                                alignment: appLang.contains('ar')?Alignment.topRight:Alignment.topLeft,
+                                alignment: appLang.contains('ar')
+                                    ? Alignment.topRight
+                                    : Alignment.topLeft,
                                 child: Text(
                                   routeController.endPoint?.name ??
                                       AppLocale.whereYouGo.getString(context),
                                   maxLines: 1,
                                   style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize:
-                                        widthOrHeight0(context, 0) * 0.025,
-                                  ),
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize:
+                                          widthOrHeight0(context, 0) * 0.025,
+                                      color:
+                                          routeController.endPoint?.name == null
+                                              ? Colors.grey
+                                              : null),
                                 ),
                               ),
                             ),
@@ -250,10 +260,18 @@ class _RouteScreenState extends State<RouteScreen> {
   }
 
   void addStartPoint(StationsModel startPoint) async {
-    //startPoint.latLng!.latitude,startPoint.latLng!.longitude
     setState(() {
       routeController.startPoint = startPoint;
     });
+    final GoogleMapController controller = await routeController.completer.future;
+    CameraPosition cameraPosition = CameraPosition(
+        target:
+            LatLng(startPoint.latLng!.latitude, startPoint.latLng!.longitude),
+        zoom: 17);
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void addEndPoint(StationsModel endPoint) {

@@ -10,14 +10,12 @@ import 'package:location/location.dart';
 
 import 'position_services.dart';
 
-class RouteController{
-
-
+class RouteController {
   bool onTapCur = false;
   bool onTapWh = false;
 
-  late final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
-
+  final Completer<GoogleMapController> completer =
+      Completer<GoogleMapController>();
   NearestStation nearestStation = NearestStation();
 
   final TextEditingController controllerStart = TextEditingController();
@@ -26,13 +24,12 @@ class RouteController{
   PositionServices positionServices = PositionServices();
 
   PolylinePoints polylinePoints = PolylinePoints();
-  CameraPosition iniCameraPosition =
-  CameraPosition(target: LatLng(locationData.latitude!, locationData.longitude!), zoom: 15);
+  CameraPosition iniCameraPosition = CameraPosition(
+      target: LatLng(locationData.latitude!, locationData.longitude!),
+      zoom: 15);
 
   Set<Polyline> polyLine = <Polyline>{};
   List<LatLng> latLong = [];
-
-
 
   BitmapDescriptor myLocationMarkerIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor homeMarkerIcon = BitmapDescriptor.defaultMarker;
@@ -44,7 +41,7 @@ class RouteController{
       type: null,
       name: 'Current Location',
       open: null,
-      latLng: LatLng(locationData.latitude!,locationData.longitude!),
+      latLng: LatLng(locationData.latitude!, locationData.longitude!),
       rate: null,
       chargeType: null,
       distance: null);
@@ -52,7 +49,7 @@ class RouteController{
 
   void addCustomMarker(String path) {
     ImageConfiguration configuration =
-    const ImageConfiguration(size: Size(100, 100));
+        const ImageConfiguration(size: Size(100, 100));
     BitmapDescriptor.fromAssetImage(configuration, path).then((icon) {
       if (path.contains("assets/images/myLocation.png")) {
         myLocationMarkerIcon = icon;
@@ -64,13 +61,13 @@ class RouteController{
     });
   }
 
-
-
   Future<void> animateCamera(LocationData locationData) async {
-    final GoogleMapController controller = await _controller.future;
+    final GoogleMapController controller = await completer.future;
     CameraPosition cameraPosition = CameraPosition(
         target: LatLng(locationData.latitude!, locationData.longitude!),
         zoom: 17);
-    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition,));
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      cameraPosition,
+    ));
   }
 }
